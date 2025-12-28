@@ -333,7 +333,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (isset($rekap_selada_akhir))
+                                    @if (isset($rekap_selada_akhir) && $total_pemasukan_selada > 0)
                                         <tr data-bs-toggle="collapse"
                                             data-bs-target="#selada"
                                             class="cursor-pointer">
@@ -432,7 +432,7 @@
                                             @endforeach
                                         </tr>
                                     @endif
-                                    @if (isset($rekap_lainnya_akhir))
+                                    @if (isset($rekap_lainnya_akhir) && $total_pemasukan_lainnya > 0)
                                         <tr data-bs-toggle="collapse"
                                             data-bs-target="#lainnya"
                                             class="cursor-pointer">
