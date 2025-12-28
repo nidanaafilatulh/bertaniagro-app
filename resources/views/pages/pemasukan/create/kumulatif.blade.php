@@ -34,7 +34,7 @@
                             <div class="row mt-2">
                                 <div class="col-6">
                                     <label class="form-label">
-                                        Tanggal Transaksi Pemasukan
+                                        Tanggal Transaksi Pemasukan*
                                     </label>
                                     <input type="date" name="tanggal_transaksi" id="tanggal_transaksi"
                                         placeholder="Pilih tanggal" class="form-control"
@@ -42,11 +42,11 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-2"><label class="form-label">Pelanggan</label></div>
-                                <div class="col-2"><label class="form-label">Produk</label></div>
-                                <div class="col-1"><label class="form-label">Kuantitas</label></div>
-                                <div class="col-2"><label class="form-label">Satuan</label></div>
-                                <div class="col-2"><label class="form-label">Harga Satuan</label></div>
+                                <div class="col-2"><label class="form-label">Pelanggan*</label></div>
+                                <div class="col-2"><label class="form-label">Produk*</label></div>
+                                <div class="col-1"><label class="form-label">Kuantitas*</label></div>
+                                <div class="col-2"><label class="form-label">Satuan*</label></div>
+                                <div class="col-2"><label class="form-label">Harga Satuan*</label></div>
                                 <div class="col-3"><label class="form-label">Jumlah</label></div>
                             </div>
                             <div id="transaksi-container">

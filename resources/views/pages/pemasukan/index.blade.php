@@ -149,16 +149,18 @@
                                         <td class="text-end">
                                             <div class="btn-list flex-nowrap justify-content-end">
                                                 @if ($pemasukan->bukti_bayar == null)
-                                                    <a href="#" class="btn btn-1" data-bs-toggle="modal"
+                                                    <a href="#" class="btn btn-outline-warning" data-bs-toggle="modal"
                                                         data-bs-target="#modal-upload"
                                                         data-no_transaksi="{{ $pemasukan->no_transaksi }}">
                                                         Unggah Bukti Bayar
                                                     </a>
                                                 @endif
-                                                <a href="/pemasukan/{{ $pemasukan->no_transaksi }}" class="btn btn-1">
+
+                                                <a href="/pemasukan/{{ $pemasukan->no_transaksi }}" class="btn btn-outline-info">
                                                     Detail Transaksi
                                                 </a>
-                                                <a href="#" class="btn btn-1" data-bs-toggle="modal"
+
+                                                <a href="#" class="btn btn-outline-danger" data-bs-toggle="modal"
                                                     data-bs-target="#modal-delete"
                                                     data-no_transaksi="{{ $pemasukan->no_transaksi }}">
                                                     Hapus

@@ -34,7 +34,7 @@
                             <div class="row mt-2">
                                 <div class="col-5 me-6">
                                     <label class="form-label">
-                                        Pelanggan
+                                        Pelanggan*
                                     </label>
                                     <input type="text" name="pelanggan" id="pelanggan"
                                         placeholder="Masukkan nama pelanggan"
@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="col-5 ms-8">
                                     <label class="form-label">
-                                        Tanggal Transaksi Pemasukan
+                                        Tanggal Transaksi Pemasukan*
                                     </label>
                                     <input type="date" name="tanggal_transaksi" id="tanggal_transaksi"
                                         placeholder="Pilih tanggal" class="form-control"
@@ -57,10 +57,10 @@
                                 <input type="hidden" name="no_transaksi" value="{{ $nextNo }}">
                             </div>
                             <div class="row mt-4">
-                                <div class="col-3"><label class="form-label">Produk</label></div>
-                                <div class="col-2"><label class="form-label">Kuantitas</label></div>
-                                <div class="col-2"><label class="form-label">Satuan</label></div>
-                                <div class="col-2"><label class="form-label">Harga Satuan</label></div>
+                                <div class="col-3"><label class="form-label">Produk*</label></div>
+                                <div class="col-2"><label class="form-label">Kuantitas*</label></div>
+                                <div class="col-2"><label class="form-label">Satuan*</label></div>
+                                <div class="col-2"><label class="form-label">Harga Satuan*</label></div>
                                 <div class="col-3"><label class="form-label">Jumlah</label></div>
                             </div>
                             <div id="produk-container">

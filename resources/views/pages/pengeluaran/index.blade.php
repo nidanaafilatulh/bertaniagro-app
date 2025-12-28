@@ -66,29 +66,29 @@
                             <div class="ms-auto">
                                 <div class="d-flex flex-wrap align-items-end gap-3">
 
-                                        <div>
-                                            <label class="form-label fw-semibold mb-1">Tanggal Mulai</label>
-                                            <input type="date" name="tanggal_mulai" class="form-control"
-                                                value="{{ request('tanggal_mulai', $tanggal_mulai) }}" >
-                                        </div>
-
-                                        <div>
-                                            <label class="form-label fw-semibold mb-1">Tanggal Akhir</label>
-                                            <input type="date" name="tanggal_akhir" class="form-control"
-                                                value="{{ request('tanggal_akhir', $tanggal_akhir) }}" >
-                                        </div>
-
-                                        <div>
-                                            <label class="form-label fw-semibold mb-1">Search</label>
-                                            <input type="text" name="search" class="form-control" placeholder="Cari..."
-                                                value="{{ request('search') }}">
-                                        </div>
-
-                                        <div>
-                                            <button class="btn btn-primary" type="submit">Filter</button>
-                                        </div>
-
+                                    <div>
+                                        <label class="form-label fw-semibold mb-1">Tanggal Mulai</label>
+                                        <input type="date" name="tanggal_mulai" class="form-control"
+                                            value="{{ request('tanggal_mulai', $tanggal_mulai) }}">
                                     </div>
+
+                                    <div>
+                                        <label class="form-label fw-semibold mb-1">Tanggal Akhir</label>
+                                        <input type="date" name="tanggal_akhir" class="form-control"
+                                            value="{{ request('tanggal_akhir', $tanggal_akhir) }}">
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label fw-semibold mb-1">Search</label>
+                                        <input type="text" name="search" class="form-control" placeholder="Cari..."
+                                            value="{{ request('search') }}">
+                                    </div>
+
+                                    <div>
+                                        <button class="btn btn-primary" type="submit">Filter</button>
+                                    </div>
+
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -140,7 +140,7 @@
                                         <td>Rp {{ number_format($pengeluaran->jumlah, 0, ',', '.') }}</td>
                                         <td class="text-end">
                                             <div class="btn-list flex-nowrap justify-content-end">
-                                                <a href="#" class="btn btn-1" data-bs-toggle="modal"
+                                                <a href="#" class="btn btn-outline-warning" data-bs-toggle="modal"
                                                     data-bs-target="#modal-edit" data-id="{{ $pengeluaran->id }}"
                                                     data-tanggal="{{ $pengeluaran->tanggal }}"
                                                     data-jenis="{{ $pengeluaran->jenis_pengeluaran }}"
@@ -150,7 +150,7 @@
                                                     data-harga="{{ $pengeluaran->harga_per_item }}">
                                                     Edit
                                                 </a>
-                                                <a href="#" class="btn btn-1" data-bs-toggle="modal"
+                                                <a href="#" class="btn btn-outline-danger" data-bs-toggle="modal"
                                                     data-bs-target="#modal-delete" data-id="{{ $pengeluaran->id }}">
                                                     Hapus
                                                 </a>
@@ -244,13 +244,14 @@
 
                             <div class="col-lg-4 mb-3">
                                 <label class="form-label">Harga per-Item</label>
-                                <input type="number" class="form-control" name="harga_per_item"
-                                    id="edit_harga_per_item" required>
+                                <input type="text" class="form-control" id="edit_harga_per_item_display" required>
+                                <input type="hidden" name="harga_per_item" id="edit_harga_per_item">
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <label class="form-label">Jumlah</label>
-                                <input type="number" class="form-control" name="jumlah" id="edit_jumlah" readonly>
+                                <input type="text" class="form-control" id="edit_jumlah_display" readonly>
+                                <input type="hidden" name="jumlah" id="edit_jumlah">
                             </div>
 
                         </div>
@@ -281,37 +282,56 @@
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const editModal = document.getElementById('modal-edit');
 
-            editModal.addEventListener('show.bs.modal', function(event) {
-                let button = event.relatedTarget;
+            function formatRupiah(angka) {
+                return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
 
+            function unformatRupiah(rp) {
+                return rp.replace(/[^\d]/g, '');
+            }
+
+            editModal.addEventListener('show.bs.modal', function (event) {
+                let button = event.relatedTarget;
                 let id = button.getAttribute('data-id');
 
-                // Set form action (PUT)
                 document.getElementById('editForm').action = "/pengeluaran/" + id;
 
-                // Set input values
                 document.getElementById('edit_tanggal').value = button.getAttribute('data-tanggal');
                 document.getElementById('edit_jenis_pengeluaran').value = button.getAttribute('data-jenis');
                 document.getElementById('edit_nama_item').value = button.getAttribute('data-nama');
                 document.getElementById('edit_keterangan').value = button.getAttribute('data-ket');
                 document.getElementById('edit_kuantitas').value = button.getAttribute('data-kuantitas');
-                document.getElementById('edit_harga_per_item').value = button.getAttribute('data-harga');
 
-                // Calculate jumlah
+                let harga = button.getAttribute('data-harga');
+
+                document.getElementById('edit_harga_per_item').value = harga;
+                document.getElementById('edit_harga_per_item_display').value = formatRupiah(harga);
+
                 calculateEditJumlah();
             });
 
             function calculateEditJumlah() {
                 let q = parseFloat(document.getElementById('edit_kuantitas').value) || 0;
                 let h = parseFloat(document.getElementById('edit_harga_per_item').value) || 0;
-                document.getElementById('edit_jumlah').value = q * h;
+                let total = q * h;
+
+                document.getElementById('edit_jumlah').value = total;
+                document.getElementById('edit_jumlah_display').value = formatRupiah(total);
             }
 
+            // Harga per item input
+            document.getElementById('edit_harga_per_item_display').addEventListener('input', function () {
+                let value = unformatRupiah(this.value);
+                this.value = formatRupiah(value);
+                document.getElementById('edit_harga_per_item').value = value;
+                calculateEditJumlah();
+            });
+
             document.getElementById('edit_kuantitas').addEventListener('input', calculateEditJumlah);
-            document.getElementById('edit_harga_per_item').addEventListener('input', calculateEditJumlah);
         });
     </script>
+
 @endsection

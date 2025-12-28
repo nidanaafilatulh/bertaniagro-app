@@ -33,16 +33,16 @@
                             @csrf
                             <div class="row mt-2">
                                 <div class="col-6">
-                                    <label class="form-label">Tanggal Transaksi Pengeluaran</label>
+                                    <label class="form-label">Tanggal Transaksi Pengeluaran*</label>
                                     <input type="date" placeholder="Pilih tanggal" class="form-control" name="tanggal"
                                         id="tanggal" value="{{ old('tanggal', $tanggal) }}" required>
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-3"><label class="form-label">Jenis Pengeluaran</label></div>
-                                <div class="col-3"><label class="form-label">Nama Item</label></div>
-                                <div class="col-1"><label class="form-label">Kuantitas</label></div>
-                                <div class="col-2"><label class="form-label">Harga per-Item</label></div>
+                                <div class="col-3"><label class="form-label">Jenis Pengeluaran*</label></div>
+                                <div class="col-3"><label class="form-label">Nama Item*</label></div>
+                                <div class="col-1"><label class="form-label">Kuantitas*</label></div>
+                                <div class="col-2"><label class="form-label">Harga per-Item*</label></div>
                                 <div class="col-2"><label class="form-label">Jumlah</label></div>
                             </div>
                             <div id="pengeluaran-container">

@@ -33,13 +33,13 @@
                             @csrf
                             <div class="row mt-2">
                                 <div class="col-6">
-                                    <label class="form-label">Tanggal Transaksi Pengeluaran</label>
+                                    <label class="form-label">Tanggal Transaksi Pengeluaran*</label>
                                     <input type="date" placeholder="Pilih tanggal" class="form-control" name="tanggal"
                                         id="tanggal" value="{{ old('tanggal', $tanggal) }}" required>
                                 </div>
 
                                 <div class="col-6">
-                                    <label class="form-label">Jenis Pengeluaran</label>
+                                    <label class="form-label">Jenis Pengeluaran*</label>
                                     <input type="text" placeholder="Masukkan jenis pengeluaran"
                                         class="form-control @error('jenis_pengeluaran') is-invalid @enderror"
                                         id="jenis_pengeluaran" name="jenis_pengeluaran"
@@ -55,7 +55,7 @@
 
                             <div class="row mt-4">
                                 <div class="col-3">
-                                    <label class="form-label">Nama Item</label>
+                                    <label class="form-label">Nama Item*</label>
                                     <input type="text" placeholder="Masukkan nama item"
                                         class="form-control @error('nama_item') is-invalid @enderror" id="nama_item"
                                         name="nama_item" value="{{ old('nama_item') }}" required>
@@ -80,7 +80,7 @@
                                 </div>
 
                                 <div class="col-2">
-                                    <label class="form-label">Kuantitas</label>
+                                    <label class="form-label">Kuantitas*</label>
                                     <input type="number" step="0.01" placeholder="Masukkan kuantitas"
                                         class="form-control @error('kuantitas') is-invalid @enderror" id="kuantitas"
                                         name="kuantitas" value="{{ old('kuantitas') }}" required>
@@ -93,7 +93,7 @@
                                 </div>
 
                                 <div class="col-2">
-                                    <label class="form-label">Harga per-Item</label>
+                                    <label class="form-label">Harga per-Item*</label>
                                     <input type="text" placeholder="Masukkan harga"
                                         class="form-control @error('harga_per_item') is-invalid @enderror"
                                         id="harga_per_item" name="harga_per_item" oninput="formatRupiah(this)"
