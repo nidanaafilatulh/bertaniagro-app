@@ -100,7 +100,7 @@ class PemasukanController extends Controller
             'pelanggan'          => 'required|string',
             'tanggal_transaksi'  => 'required|date',
             'total_keseluruhan'  => 'required|numeric|min:0',
-            'bukti_bayar'        => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+            'bukti_bayar'        => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
 
             'produk.*'           => 'required|string',
             'kuantitas.*'        => 'required|numeric|min:0.01',
@@ -219,7 +219,7 @@ class PemasukanController extends Controller
     public function update(Request $request, TransaksiPemasukan $pemasukan)
     {
         $validator = Validator::make($request->all(), [
-            'bukti_bayar' => 'required|mimes:jpg,png|max:10240',
+            'bukti_bayar' => 'required|mimes:jpg,png|max:2048',
         ], [
             'bukti_bayar.required' => 'File bukti bayar harus diunggah.',
         ]);

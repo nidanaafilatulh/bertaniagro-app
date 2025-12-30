@@ -63,7 +63,8 @@
                                     <label class="form-label">
                                         Kuantias
                                     </label>
-                                    <input type="number" step="0.01" class="form-control" value="{{ $pemasukan->itemPemasukan[0]->kuantitas}}" disabled>
+                                    <input type="number" step="0.01" class="form-control"
+                                        value="{{ $pemasukan->itemPemasukan[0]->kuantitas }}" disabled>
                                 </div>
                                 <div class="col-2">
                                     <label class="form-label">
@@ -101,8 +102,8 @@
                                         <input type="text" class="form-control" value="{{ $item->satuan }}" disabled>
                                     </div>
                                     <div class="col-2">
-                                        <input type="text" class="form-control" value="Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}"
-                                            disabled>
+                                        <input type="text" class="form-control"
+                                            value="Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}" disabled>
                                     </div>
                                     <div class="col-3">
                                         <input type="text" class="form-control"
@@ -116,10 +117,10 @@
                                     <label class="form-label">
                                         Bukti Bayar
                                     </label>
-                                    <div col-1>
-                                        <a href="{{ asset('storage/bukti_bayar/' . $pemasukan->bukti_bayar) }}" download
+                                    <div class="col-1">
+                                        <a href="{{ Storage::url('bukti_bayar/' . $pemasukan->bukti_bayar) }}" download
                                             class="btn btn-primary mt-2">
-                                            Download File
+                                            Unduh File
                                         </a>
                                     </div>
                                 </div>
@@ -136,10 +137,15 @@
                             <div class="row mt-3">
                                 <div class="col-lg-6">
                                     <label class="form-label d-flex">
-                                        <h2>Total Keseluruhan: <span
-                                                class="ms-3">Rp {{ number_format($pemasukan->itemPemasukan->sum(function ($item) {
-                                                    return $item->harga_satuan * $item->kuantitas;
-                                                }), 0, ',', '.') }}</span>
+                                        <h2>Total Keseluruhan: <span class="ms-3">Rp
+                                                {{ number_format(
+                                                    $pemasukan->itemPemasukan->sum(function ($item) {
+                                                        return $item->harga_satuan * $item->kuantitas;
+                                                    }),
+                                                    0,
+                                                    ',',
+                                                    '.',
+                                                ) }}</span>
                                         </h2>
                                     </label>
                                 </div>

@@ -8,7 +8,7 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <div class="page-pretitle">
-                        <a href="/pemasukan">Daftar Pemasukan</a>
+                        <a href="{{ url()->previous() }}">Kembali</a>
                     </div>
                     <h2 class="page-title">
                         Tambah Data Transaksi Pemasukan Kumulatif
@@ -80,7 +80,7 @@
                                         <div class="col-2">
                                             <input type="text" name="harga_satuan[]"
                                                 class="form-control harga-format @error('harga_satuan.*') is-invalid @enderror"
-                                                value="{{ old('harga_satuan.' . $i) }}" placeholder="Masukkan harga satuan"
+                                                value="{{ old('harga_satuan.' . $i) }}" placeholder="Masukan harga"
                                                 required>
                                         </div>
                                         <div class="col-2">

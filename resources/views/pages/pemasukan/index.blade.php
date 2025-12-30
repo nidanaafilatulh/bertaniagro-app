@@ -222,7 +222,7 @@
                     @method('put')
 
                     <div class="modal-header">
-                        <h5 class="modal-title">Upload Bukti Bayar (JPG, JPEG, PNG, max 10 MB)</h5>
+                        <h5 class="modal-title">Upload Bukti Bayar (JPG, JPEG, PNG, max 2 MB)</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
@@ -276,7 +276,7 @@
     <script>
         document.getElementById('bukti_bayar').addEventListener('change', function() {
             const file = this.files[0];
-            const maxSize = 10 * 1024 * 1024; // 10 MB
+            const maxSize = 2 * 1024 * 1024; // 2 MB
             const allowedExtensions = ['jpg', 'jpeg', 'png'];
 
             const fileExt = file.name.split('.').pop().toLowerCase();
@@ -292,7 +292,7 @@
                 let errorDiv = document.createElement('div');
                 errorDiv.id = 'js-error-bukti';
                 errorDiv.classList.add('text-danger', 'mt-2');
-                errorDiv.textContent = "Ukuran file maksimal 10 MB.";
+                errorDiv.textContent = "Ukuran file maksimal 2 MB.";
 
                 // Insert after input
                 this.parentNode.appendChild(errorDiv);

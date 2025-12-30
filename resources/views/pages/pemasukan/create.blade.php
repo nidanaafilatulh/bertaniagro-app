@@ -8,7 +8,7 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <div class="page-pretitle">
-                        <a href="/pemasukan">Daftar Pemasukan</a>
+                        <a href="{{ url()->previous() }}">Kembali</a>
                     </div>
                     <h2 class="page-title">
                         Tambah Data Transaksi Pemasukan
@@ -129,7 +129,7 @@
                             <div class="row">
                                 <div class="col-6 mt-3">
                                     <label class="form-label">Upload Bukti Bayar (JPG/PNG)</label>
-                                    <p>Maksimum size file 10 Mb</p>
+                                    <p>Maksimum size file 2 MB</p>
                                     <input type="file" name="bukti_bayar"
                                         class="form-control @error('bukti_bayar') is-invalid @enderror">
                                     @error('bukti_bayar')
