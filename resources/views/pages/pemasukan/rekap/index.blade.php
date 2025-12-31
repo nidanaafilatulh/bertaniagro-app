@@ -475,6 +475,10 @@
                                             @endforeach
                                         @endforeach
                                     @endif
+                                    <tr>
+                                        <td colspan="2"><strong>Total Akhir Pemasukan</strong></td>
+                                        <td>Rp {{ number_format($total_akhir_pemasukan, 0, ',', '.') }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

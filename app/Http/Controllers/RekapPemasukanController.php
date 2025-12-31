@@ -221,6 +221,7 @@ class RekapPemasukanController extends Controller
         });
         // Total pemasukan lainnya
         $total_pemasukan_lainnya = $dataLainnya->sum('omset');
+
         // ⭐ Total pemasukan keseluruhan
         $totalPemasukan = $data->sum('omset');
 
@@ -241,7 +242,7 @@ class RekapPemasukanController extends Controller
             'total_omset_harian' => $totalOmsetHarian,
             'tanggal_hari_ini' => $today,
             'tanggal' => $tanggal,
-            'total_pemasukan' => $totalPemasukan,
+            'total_akhir_pemasukan' => $totalPemasukan,
         ]);
     }
 
@@ -489,7 +490,7 @@ class RekapPemasukanController extends Controller
             'rekap_istana_akhir' => $rekapIstanaAkhir,
             'rekap_lainnya_akhir' => $rekapLainnyaAkhir,
             'total_pemasukan_lainnya' => $total_pemasukan_lainnya,
-            'total_pemasukan' => $totalPemasukan,
+            'total_akhir_pemasukan' => $totalPemasukan,
             'total_omset_harian' => $totalOmsetHarian,
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_akhir' => $tanggal_akhir

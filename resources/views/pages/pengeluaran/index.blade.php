@@ -215,18 +215,18 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-6 mb-3">
-                                <label class="form-label">Tanggal Pengeluaran</label>
+                                <label class="form-label">Tanggal Pengeluaran*</label>
                                 <input type="date" class="form-control" name="tanggal" id="edit_tanggal" required>
                             </div>
 
                             <div class="col-lg-6 mb-3">
-                                <label class="form-label">Jenis Pengeluaran</label>
+                                <label class="form-label">Jenis Pengeluaran*</label>
                                 <input type="text" class="form-control" name="jenis_pengeluaran"
                                     id="edit_jenis_pengeluaran" required>
                             </div>
 
                             <div class="col-lg-6 mb-3">
-                                <label class="form-label">Nama Item</label>
+                                <label class="form-label">Nama Item*</label>
                                 <input type="text" class="form-control" name="nama_item" id="edit_nama_item"
                                     required>
                             </div>
@@ -237,13 +237,13 @@
                             </div>
 
                             <div class="col-lg-4 mb-3">
-                                <label class="form-label">Kuantitas</label>
+                                <label class="form-label">Kuantitas*</label>
                                 <input type="number" step="0.01" class="form-control" name="kuantitas"
                                     id="edit_kuantitas" required>
                             </div>
 
                             <div class="col-lg-4 mb-3">
-                                <label class="form-label">Harga per-Item</label>
+                                <label class="form-label">Harga per-Item*</label>
                                 <input type="text" class="form-control" id="edit_harga_per_item_display" required>
                                 <input type="hidden" name="harga_per_item" id="edit_harga_per_item">
                             </div>

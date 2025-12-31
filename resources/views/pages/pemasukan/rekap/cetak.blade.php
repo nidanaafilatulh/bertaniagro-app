@@ -74,7 +74,7 @@
                                     @endforeach
                                     @if (count($rekap_selada[$tanggal]) > 1)
                                         <div><strong>Total Selada : Rp
-                                            {{ number_format($total_selada, 0, ',', '.') }}</strong></div>
+                                                {{ number_format($total_selada, 0, ',', '.') }}</strong></div>
                                     @endif
                                 @endif
                                 @if (isset($rekap_aeon[$tanggal]))
@@ -154,7 +154,7 @@
                                     @endforeach
                                     @if (count($rekap_lainnya[$tanggal]) > 1)
                                         <div><strong>Total Lainnya : Rp
-                                            {{ number_format($total_lainnya, 0, ',', '.') }}</strong>
+                                                {{ number_format($total_lainnya, 0, ',', '.') }}</strong>
                                         </div>
                                     @endif
                                 @endif
@@ -318,6 +318,10 @@
                     @endforeach
                 @endforeach
             @endif
+            <tr class="fw-bold bg-light">
+                <td colspan="2">Total Akhir Pemasukan</td>
+                <td>Rp {{ number_format($total_akhir_pemasukan, 0, ',', '.') }}</td>
+            </tr>
         </tbody>
     </table>
     {{-- <p><strong>Rekap</strong></p>
