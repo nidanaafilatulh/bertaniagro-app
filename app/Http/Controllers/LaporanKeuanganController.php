@@ -327,6 +327,9 @@ class LaporanKeuanganController extends Controller
 
         $dataGrouped = $data->groupBy('tanggal');
 
+        $rentang_mulai = Carbon::parse($tanggal_mulai)->translatedFormat('d F Y');
+        $rentang_akhir = Carbon::parse($tanggal_akhir)->translatedFormat('d F Y');
+
 
         // ============================
         // RETURN DATA KE VIEW
@@ -338,8 +341,8 @@ class LaporanKeuanganController extends Controller
             'tanggal_hari_ini' => $today,
             "saldo_awal" => $saldo_awal,
             "data" => $dataGrouped,
-            'tanggal_mulai' => $tanggal_mulai,
-            'tanggal_akhir' => $tanggal_akhir,
+            'tanggal_mulai' => $rentang_mulai,
+            'tanggal_akhir' => $rentang_akhir,
         ]));
         $mpdf->Output('Laporan_Cashflow_' . $tanggal_mulai . '_sampai_' . $tanggal_akhir . '.pdf', \Mpdf\Output\Destination::INLINE);
     }
@@ -678,11 +681,14 @@ class LaporanKeuanganController extends Controller
         $totalPengeluaran = $dataPengeluaran->sum('total_pengeluaran');
 
         $total =  $totalOmsetPemasukan - $totalPengeluaran;
+
+        $rentang_mulai = Carbon::parse($tanggal_mulai)->translatedFormat('d F Y');
+        $rentang_akhir = Carbon::parse($tanggal_akhir)->translatedFormat('d F Y');
         
        $html = view('pages.keuangan.labaRugi.cetak', [
             'title' => 'Laporan Laba Rugi',
-            'tanggal_mulai' => $tanggal_mulai,
-            'tanggal_akhir' => $tanggal_akhir,
+            'tanggal_mulai' => $rentang_mulai,
+            'tanggal_akhir' => $rentang_akhir,
             // 'pemasukan' => $dataPemasukan,
             'total_selada_omset' => $totalSeladaOmset,
             'total_aeon_omset' => $totalAeonOmset,

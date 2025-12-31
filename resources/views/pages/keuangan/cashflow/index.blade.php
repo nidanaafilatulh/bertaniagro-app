@@ -48,7 +48,7 @@
                             </a>
                         </div>
                     </div>
-                    @if (request('tanggal_mulai') && request('tanggal_akhir'))
+                    @if ((request('tanggal_mulai') && request('tanggal_akhir')) && (request('tanggal_mulai') < request('tanggal_akhir')))
                         <div class="table-responsive">
                             <table class="table table-selectable card-table table-vcenter text-nowrap datatable">
                                 <thead>
@@ -158,6 +158,10 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    @elseif ((request('tanggal_mulai') > request('tanggal_akhir')))
+                        <div class="alert alert-warning mt-3" role="alert">
+                            <strong>Peringatan! Rentang tanggal yang dimasukan salah.</strong> Tanggal Mulai harus lebih kecil dari Tanggal Akhir.
                         </div>
                     @endif
                 </div>

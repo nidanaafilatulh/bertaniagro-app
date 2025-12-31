@@ -146,6 +146,9 @@ class RekapPengeluaranController extends Controller
         
         $totalPengeluaran = $dataJenisPengeluaran->sum('total_pengeluaran') + $dataJenisPengeluaranLain->sum('total_pengeluaran');
 
+        $rentang_mulai = Carbon::parse($tanggal_mulai)->translatedFormat('d F Y');
+        $rentang_akhir = Carbon::parse($tanggal_akhir)->translatedFormat('d F Y');
+
         $mpdf = new \Mpdf\Mpdf();
         $mpdf->WriteHTML(view('pages.pengeluaran.rekap.cetak', [
             'title' => 'Rekap Pengeluaran',
@@ -155,8 +158,8 @@ class RekapPengeluaranController extends Controller
             'daftar_jenis_lain' => $dataJenisPengeluaranLain,
             'daftar_item_lain' => $dataItemLain,
             'total_pengeluaran' => $totalPengeluaran,
-            'tanggal_mulai' => $tanggal_mulai,
-            'tanggal_akhir' => $tanggal_akhir,
+            'tanggal_mulai' => $rentang_mulai,
+            'tanggal_akhir' => $rentang_akhir,
         ]));
         $mpdf->Output('Rekap_Pengeluaran_' . $tanggal_mulai . '_sampai_' . $tanggal_akhir . '.pdf', \Mpdf\Output\Destination::INLINE);
     }
