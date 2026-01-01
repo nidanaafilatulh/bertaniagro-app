@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <title>BertaniAgro-CashApp | {{ $title }}</title>
+    <title>BertaniAgro-App | {{ $title }}</title>
 
     <link rel="icon" href="./favicon-dev.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="./favicon-dev.ico" type="image/x-icon" />
