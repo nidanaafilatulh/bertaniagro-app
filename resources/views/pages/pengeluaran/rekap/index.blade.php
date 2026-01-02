@@ -65,9 +65,9 @@
                                             data-bs-target="#{{ Str::slug($jenis->jenis_pengeluaran) }}"
                                             class="cursor-pointer">
                                             <td colspan="3">
-                                                <span class="dropdown-toggle">{{ $jenis->jenis_pengeluaran }}</span>
+                                                <span class="dropdown-toggle"><strong>{{ $jenis->jenis_pengeluaran }}</strong></span>
                                             </td>
-                                            <td>Rp {{ number_format($jenis->total_pengeluaran, 0, ',', '.') }}</td>
+                                            <td><strong>Rp {{ number_format($jenis->total_pengeluaran, 0, ',', '.') }}</strong></td>
                                         </tr>
                                         @foreach ($daftar_item[$jenis->jenis_pengeluaran] ?? [] as $item)
                                             <tr class="collapse bg-light" id="{{ Str::slug($jenis->jenis_pengeluaran) }}">
@@ -89,9 +89,9 @@
                                             data-bs-target="#{{ Str::slug($jenis->jenis_pengeluaran) }}"
                                             class="cursor-pointer">
                                             <td colspan="3">
-                                                <span class="dropdown-toggle">{{ $jenis->jenis_pengeluaran }}</span>
+                                                <span class="dropdown-toggle"><strong>{{ $jenis->jenis_pengeluaran }}</strong></span>
                                             </td>
-                                            <td>Rp {{ number_format($jenis->total_pengeluaran, 0, ',', '.') }}</td>
+                                            <td><strong>Rp {{ number_format($jenis->total_pengeluaran, 0, ',', '.') }}</strong></td>
                                         </tr>
                                         @foreach ($daftar_item_lain[$jenis->jenis_pengeluaran] ?? [] as $item)
                                             <tr class="collapse bg-light" id="{{ Str::slug($jenis->jenis_pengeluaran) }}">
