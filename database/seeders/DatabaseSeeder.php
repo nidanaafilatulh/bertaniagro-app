@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
         //     'password' => bcrypt('password'),
         // ]);
 
-        $this->call(PemasukanSeeder::class);
-        // $this->call(PengeluaranSeeder::class);
+        // $this->call(PemasukanSeeder::class);
+        // $this->call(TransaksiPemasukanSeeder::class);
+         $this->call(PengeluaranSeeder::class);
     }
 }

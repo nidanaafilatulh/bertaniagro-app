@@ -11,7 +11,7 @@
 <body>
     <h1>Rekap Pemasukan</h1>
     <p>Periode: {{ $tanggal_mulai }} hingga {{ $tanggal_akhir }}</p>
-    @if ((request('tanggal_mulai') && request('tanggal_akhir')) && (request('tanggal_mulai') < request('tanggal_akhir')))
+    @if ((request('tanggal_mulai') && request('tanggal_akhir')) && (request('tanggal_mulai') <= request('tanggal_akhir')))
         <table border="1" cellpadding="5" cellspacing="0">
             <thead>
                 <tr>

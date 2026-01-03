@@ -7,83 +7,125 @@ use Illuminate\Support\Facades\DB;
 
 class PengeluaranSeeder extends Seeder
 {
-    public function run(): void
+
+public function run(): void
 {
     $data = [
-        // Gaji
+        // Pengiriman
         [
-            'tanggal' => '2025-09-21',
+            'tanggal' => '2025-09-10',
             'jenis_pengeluaran' => 'Pengiriman',
             'nama_item' => 'Bensin',
-            'keterangan' => 'Bensin Beat Hitam',
+            'keterangan' => 'Beat Hitam',
             'kuantitas' => 1,
-            'harga_per_item' => 48000,
-            'jumlah' => 1 * 48000,
+            'harga_per_item' => 30000,
+            'jumlah' => 30000,
         ],
+
+        // Gaji Karyawan
         [
-            'tanggal' => '2025-09-21',
+            'tanggal' => '2025-09-10',
             'jenis_pengeluaran' => 'Gaji Karyawan',
-            'nama_item' => 'Gaji Mas Khafid',
+            'nama_item' => 'Mas Khafid',
             'keterangan' => null,
             'kuantitas' => 1,
             'harga_per_item' => 250000,
             'jumlah' => 250000,
         ],
         [
-            'tanggal' => '2025-09-21',
+            'tanggal' => '2025-09-10',
             'jenis_pengeluaran' => 'Gaji Karyawan',
-            'nama_item' => 'Gaji Alfian',
+            'nama_item' => 'Disma',
+            'keterangan' => null,
+            'kuantitas' => 1,
+            'harga_per_item' => 130000,
+            'jumlah' => 130000,
+        ],
+        [
+            'tanggal' => '2025-09-10',
+            'jenis_pengeluaran' => 'Gaji Karyawan',
+            'nama_item' => 'Alfian',
             'keterangan' => null,
             'kuantitas' => 1,
             'harga_per_item' => 100000,
             'jumlah' => 100000,
         ],
         [
-            'tanggal' => '2025-09-21',
+            'tanggal' => '2025-09-10',
             'jenis_pengeluaran' => 'Gaji Karyawan',
-            'nama_item' => 'Gaji Nanda',
+            'nama_item' => 'Yanto',
             'keterangan' => null,
             'kuantitas' => 1,
             'harga_per_item' => 80000,
             'jumlah' => 80000,
         ],
         [
-            'tanggal' => '2025-09-21',
+            'tanggal' => '2025-09-10',
             'jenis_pengeluaran' => 'Gaji Karyawan',
-            'nama_item' => 'Gaji Yanto',
+            'nama_item' => 'Arya',
             'keterangan' => null,
             'kuantitas' => 1,
             'harga_per_item' => 80000,
             'jumlah' => 80000,
         ],
         [
-            'tanggal' => '2025-09-21',
+            'tanggal' => '2025-09-10',
             'jenis_pengeluaran' => 'Gaji Karyawan',
-            'nama_item' => 'Gaji Arya',
+            'nama_item' => 'Tukang',
             'keterangan' => null,
             'kuantitas' => 1,
-            'harga_per_item' => 80000,
-            'jumlah' => 80000,
+            'harga_per_item' => 260000,
+            'jumlah' => 260000,
         ],
+
+        // Nutrisi
         [
-            'tanggal' => '2025-09-21',
+            'tanggal' => '2025-09-10',
             'jenis_pengeluaran' => 'Nutrisi',
-            'nama_item' => 'Nutrisi Zona 1',
+            'nama_item' => 'Zona 1',
             'keterangan' => null,
-            'kuantitas' => 15,
+            'kuantitas' => 13,
             'harga_per_item' => 14000,
-            'jumlah' => 15 * 14000,
+            'jumlah' => 13 * 14000,
         ],
         [
-            'tanggal' => '2025-09-21',
+            'tanggal' => '2025-09-10',
             'jenis_pengeluaran' => 'Nutrisi',
-            'nama_item' => 'Nutrisi Zona 2',
+            'nama_item' => 'Zona 2',
             'keterangan' => null,
-            'kuantitas' => 11.3,
+            'kuantitas' => 5,
             'harga_per_item' => 14000,
-            'jumlah' => 11.3 * 14000,
+            'jumlah' => 5 * 14000,
         ],
-        
+        [
+            'tanggal' => '2025-09-10',
+            'jenis_pengeluaran' => 'Nutrisi',
+            'nama_item' => 'Zona 3',
+            'keterangan' => null,
+            'kuantitas' => 1,
+            'harga_per_item' => 14000,
+            'jumlah' => 1 * 14000,
+        ],
+
+        // Operasional
+        [
+            'tanggal' => '2025-09-10',
+            'jenis_pengeluaran' => 'Lain lain',
+            'nama_item' => 'Mantel Plastik',
+            'keterangan' => null,
+            'kuantitas' => 1,
+            'harga_per_item' => 10000,
+            'jumlah' => 10000,
+        ],
+        [
+            'tanggal' => '2025-09-10',
+            'jenis_pengeluaran' => 'Lain lain',
+            'nama_item' => 'Ongkos Bongkar Baja Ringan',
+            'keterangan' => null,
+            'kuantitas' => 1,
+            'harga_per_item' => 20000,
+            'jumlah' => 20000,
+        ],
     ];
 
     DB::table('transaksi_pengeluaran')->insert($data);
@@ -92,64 +134,3 @@ class PengeluaranSeeder extends Seeder
 
 }
 
-
-// [
-//             'tanggal' => '2025-09-17',
-//             'jenis_pengeluaran' => 'Benih',
-//             'nama_item' => 'Benih Pakcoy',
-//             'keterangan' => null,
-//             'kuantitas' => 1,
-//             'harga_per_item' => 20000,
-//             'jumlah' => 1 * 20000,
-//         ],
-//         [
-//             'tanggal' => '2025-09-17',
-//             'jenis_pengeluaran' => 'Benih',
-//             'nama_item' => 'Benih Fino',
-//             'keterangan' => null,
-//             'kuantitas' => 1,
-//             'harga_per_item' => 30000,
-//             'jumlah' => 1 * 30000,
-//         ],
-//         [
-//             'tanggal' => '2025-09-17',
-//             'jenis_pengeluaran' => 'Pengiriman',
-//             'nama_item' => 'Parkir dan e tol',
-//             'keterangan' => 'Parkir',
-//             'kuantitas' => 1,
-//             'harga_per_item' => 2000,
-//             'jumlah' => 1 * 2000,
-//         ],
-
-// [
-//             'tanggal' => '2025-09-17',
-//             'jenis_pengeluaran' => 'Pengiriman',
-//             'nama_item' => 'Service',
-//             'keterangan' => 'Service Beat Putih',
-//             'kuantitas' => 1,
-//             'harga_per_item' => 30000,
-//             'jumlah' => 1 * 30000,
-//         ],
-
-
-
-// [
-//             'tanggal' => '2025-09-17',
-//             'jenis_pengeluaran' => 'Listrik',
-//             'nama_item' => 'Kebun 2',
-//             'keterangan' => null,
-//             'kuantitas' => 1,
-//             'harga_per_item' => 203000,
-//             'jumlah' => 1 * 203000,
-//         ],
-
-
-// [
-//             'tanggal' => '2025-09-16',
-//             'jenis_pengeluaran' => 'Kemasan',
-//             'nama_item' => 'Plastik Zebra',
-//             'keterangan' => null,
-//             'kuantitas' => 2,
-//             'harga_per_item' => 8000,
-//             'jumlah' => 2 * 8000,
-//         ],
