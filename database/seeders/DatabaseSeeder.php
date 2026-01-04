@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         // $this->call(PemasukanSeeder::class);
-        // $this->call(TransaksiPemasukanSeeder::class);
-         $this->call(PengeluaranSeeder::class);
+         $this->call(TransaksiPemasukanSeeder::class);
+        // $this->call(PengeluaranSeeder::class);
     }
 }
