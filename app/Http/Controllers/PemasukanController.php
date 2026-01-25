@@ -21,22 +21,20 @@ class PemasukanController extends Controller
     $today = Carbon::now()->translatedFormat('d F Y');
     $show = request('show', 10);
 
-    // Date range based on existing data
-    $tanggal_mulai = DB::table('transaksi_pemasukan')->max('tanggal_transaksi');
-    $tanggal_akhir = DB::table('transaksi_pemasukan')->max('tanggal_transaksi');
+    // // Date range based on existing data
+    // $tanggal_mulai = DB::table('transaksi_pemasukan')->max('tanggal_transaksi');
+    // $tanggal_akhir = DB::table('transaksi_pemasukan')->max('tanggal_transaksi');
 
     // Default auto-filters
     $filters = [
-        'tanggal_mulai' => request('tanggal_mulai', $tanggal_mulai),
-        'tanggal_akhir' => request('tanggal_akhir', $tanggal_akhir),
+        'tanggal_mulai' => request('tanggal_mulai'),
+        'tanggal_akhir' => request('tanggal_akhir'),
         'search' => request('search'),
     ];
 
     return view('pages.pemasukan.index', [
         'title' => 'Pemasukan',
         'tanggal_hari_ini' => $today,
-        'tanggal_mulai' => $filters['tanggal_mulai'],
-        'tanggal_akhir' => $filters['tanggal_akhir'],
         'daftar_pemasukan' => TransaksiPemasukan::latest()
             ->filter($filters)
             ->paginate($show)

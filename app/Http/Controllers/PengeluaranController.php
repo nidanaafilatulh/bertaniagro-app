@@ -20,21 +20,19 @@ class PengeluaranController extends Controller
 
 
         // Date range based on existing data
-        $tanggal_mulai = DB::table('transaksi_pengeluaran')->max('tanggal');
-        $tanggal_akhir = DB::table('transaksi_pengeluaran')->max('tanggal');
+        // $tanggal_mulai = DB::table('transaksi_pengeluaran')->max('tanggal');
+        // $tanggal_akhir = DB::table('transaksi_pengeluaran')->max('tanggal');
 
         // Default auto-filters
         $filters = [
-            'tanggal_mulai' => request('tanggal_mulai', $tanggal_mulai),
-            'tanggal_akhir' => request('tanggal_akhir', $tanggal_akhir),
+            'tanggal_mulai' => request('tanggal_mulai'),
+            'tanggal_akhir' => request('tanggal_akhir'),
             'search' => request('search'),
         ];
 
         return view('pages.pengeluaran.index', [
             'title' => 'Daftar Pengeluaran',
             'tanggal_hari_ini' => $today,
-            'tanggal_mulai' => $tanggal_mulai,
-            'tanggal_akhir' => $tanggal_akhir,
             'daftar_pengeluaran' => TransaksiPengeluaran::latest('tanggal')
                                                         ->filter($filters)
                                                         ->paginate($show)

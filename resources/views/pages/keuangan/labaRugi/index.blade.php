@@ -48,14 +48,19 @@
                             </a>
                         </div>
                     </div>
-                    @if ((request('tanggal_mulai') && request('tanggal_akhir')) && (request('tanggal_mulai') <= request('tanggal_akhir')))
+                    @if (request('tanggal_mulai') && request('tanggal_akhir') && request('tanggal_mulai') <= request('tanggal_akhir'))
                         <div class="table-responsive">
+                            <h1 class="ms-3 mt-3 mb-3">Pemasukan</h1>
                             <table class="table table-selectable card-table table-vcenter text-nowrap datatable">
+                                <colgroup>
+                                    <col style="width:75%">
+                                    <col style="width:25%">
+                                </colgroup>
                                 <thead>
                                     <tr>
-                                        <th colspan="2">Pemasukan</th>
+                                        <th>Keterangan</th>
+                                        <th>Jumlah</th>
                                     </tr>
-
                                 </thead>
                                 <tbody>
                                     <tr>
@@ -98,9 +103,19 @@
                                         <td>Rp {{ number_format($total_omset_pemasukan, 0, ',', '.') }}</td>
                                     </tr>
                                 </tbody>
+                            </table>
+                        </div>
+                        <div class="table-responsive mt-3">
+                            <h1 class="ms-3 mb-3">Pengeluaran</h1>
+                            <table class="table table-selectable card-table table-vcenter text-nowrap datatable">
+                                <colgroup>
+                                    <col style="width:75%">
+                                    <col style="width:25%">
+                                </colgroup>
                                 <thead>
                                     <tr>
-                                        <th colspan="2">Pengeluaran</th>
+                                        <th>Keterangan</th>
+                                        <th>Jumlah</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -133,9 +148,10 @@
                                 </tbody>
                             </table>
                         </div>
-                    @elseif ((request('tanggal_mulai') > request('tanggal_akhir')))
+                    @elseif (request('tanggal_mulai') > request('tanggal_akhir'))
                         <div class="alert alert-warning mt-3" role="alert">
-                            <strong>Peringatan! Rentang tanggal yang dimasukan salah.</strong> Tanggal Mulai harus lebih kecil dari Tanggal Akhir.
+                            <strong>Peringatan! Rentang tanggal yang dimasukan salah.</strong> Tanggal Mulai harus lebih
+                            kecil dari Tanggal Akhir.
                         </div>
                     @endif
                 </div>

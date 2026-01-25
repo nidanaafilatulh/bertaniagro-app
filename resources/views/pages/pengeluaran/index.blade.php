@@ -69,13 +69,13 @@
                                     <div>
                                         <label class="form-label fw-semibold mb-1">Tanggal Mulai</label>
                                         <input type="date" name="tanggal_mulai" class="form-control"
-                                            value="{{ request('tanggal_mulai', $tanggal_mulai) }}">
+                                            value="{{ request('tanggal_mulai') }}">
                                     </div>
 
                                     <div>
                                         <label class="form-label fw-semibold mb-1">Tanggal Akhir</label>
                                         <input type="date" name="tanggal_akhir" class="form-control"
-                                            value="{{ request('tanggal_akhir', $tanggal_akhir) }}">
+                                            value="{{ request('tanggal_akhir') }}">
                                     </div>
 
                                     <div>

@@ -211,33 +211,41 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <div id="chart-active-users-2"></div>
-                            </div>
-                            <div class="col-md-auto">
-                                <div class="divide-y divide-y-fill">
-                                    <div class="px-3">
-                                        <div class="text-secondary">
-                                            <span class="status-dot bg-primary"></span> Pemasukan
+                        @if (request('tanggal_mulai') <= request('tanggal_akhir'))
+                            <div class="row">
+                                <div class="col">
+                                    <div id="chart-active-users-2"></div>
+                                </div>
+                                <div class="col-md-auto">
+                                    <div class="divide-y divide-y-fill">
+                                        <div class="px-3">
+                                            <div class="text-secondary">
+                                                <span class="status-dot bg-primary"></span> Pemasukan
+                                            </div>
+                                            <div class="h2">{{ number_format($totalPemasukan, 0, ',', '.') }}</div>
                                         </div>
-                                        <div class="h2">{{ number_format($totalPemasukan, 0, ',', '.') }}</div>
-                                    </div>
-                                    <div class="px-3">
-                                        <div class="text-secondary">
-                                            <span class="status-dot bg-danger"></span> Pengeluaran
+                                        <div class="px-3">
+                                            <div class="text-secondary">
+                                                <span class="status-dot bg-danger"></span> Pengeluaran
+                                            </div>
+                                            <div class="h2">{{ number_format($totalPengeluaran, 0, ',', '.') }}</div>
                                         </div>
-                                        <div class="h2">{{ number_format($totalPengeluaran, 0, ',', '.') }}</div>
-                                    </div>
-                                    <div class="px-3">
-                                        <div class="text-secondary">
-                                            <span class="status-dot bg-green"></span> Laba Rugi
+                                        <div class="px-3">
+                                            <div class="text-secondary">
+                                                <span class="status-dot bg-green"></span> Laba Rugi
+                                            </div>
+                                            <div class="h2">{{ number_format($labaRugi, 0, ',', '.') }}</div>
                                         </div>
-                                        <div class="h2">{{ number_format($labaRugi, 0, ',', '.') }}</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="alert alert-warning" role="alert">
+                                <strong>Peringatan!</strong> Harap masukkan rentang tanggal yang valid untuk melihat
+                                statistik.
+                            </div>
+                        @endif
+
                     </div>
                 </div>
             </div>

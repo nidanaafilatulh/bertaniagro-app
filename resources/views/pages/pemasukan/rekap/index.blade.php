@@ -65,11 +65,12 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($grouped as $tanggal => $items)
-                                        @php $rowspan = count($items); @endphp
-
+                                        @php 
+                                            $rowspan = count($items);
+                                            $rowClass = $loop->index % 2 == 1 ? 'table-primary' : '';
+                                        @endphp
                                         @foreach ($items as $index => $item)
-                                            <tr>
-
+                                            <tr class="{{ $rowClass }}">
                                                 @if ($index == 0)
                                                     <td rowspan="{{ $rowspan }}">
                                                         <span
