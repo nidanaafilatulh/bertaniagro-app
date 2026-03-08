@@ -8,69 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class LaporanKeuanganController extends Controller
 {
-    // public function cashflow(Request $request)
-    // {
-    //     Carbon::setLocale('id');
-    //     $today = Carbon::now()->translatedFormat('d F Y');
-    //     $tanggal_mulai = $request->tanggal_mulai;
-    //     $tanggal_akhir = $request->tanggal_akhir;
-    //     $tanggal = now()->toDateString();
-
-    //     $total_pemasukan_sebelum = 0;
-    //     $total_pengeluaran_sebelum = 0;
-
-    //     if (!empty($tanggal_mulai)) {
-    //         $total_pemasukan_sebelum = DB::table('transaksi_pemasukan')
-    //             ->whereDate('tanggal_transaksi', '<', $tanggal_mulai)
-    //             ->sum('jumlah');
-
-    //         $total_pengeluaran_sebelum = DB::table('transaksi_pengeluaran')
-    //             ->whereDate('tanggal', '<', $tanggal_mulai)
-    //             ->sum('jumlah');
-    //     }
-
-    //     $saldo_awal = $total_pemasukan_sebelum - $total_pengeluaran_sebelum;
-
-    //     // ============================
-    //     // 2. AMBIL CASHFLOW PERIODE
-    //     // ============================
-
-    //     $pemasukan = DB::table('transaksi_pemasukan')
-    //         ->select(
-    //             'tanggal_transaksi as tanggal',
-    //             DB::raw('SUM(jumlah) as total_jumlah'),
-    //             DB::raw('"pemasukan" as kategori')
-    //         )
-    //         ->whereBetween('tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-    //         ->groupBy('tanggal_transaksi');
-
-    //     $pengeluaran = DB::table('transaksi_pengeluaran')
-    //         ->select(
-    //             'tanggal',
-    //             DB::raw('SUM(jumlah) as total_jumlah'),
-    //             DB::raw('"pengeluaran" as kategori')
-    //         )
-    //         ->whereBetween('tanggal', [$tanggal_mulai, $tanggal_akhir])
-    //         ->groupBy('tanggal');
-
-    //     $data = $pemasukan
-    //         ->unionAll($pengeluaran)
-    //         ->orderBy('tanggal', 'asc')
-    //         ->get();
-
-
-    //     // ============================
-    //     // RETURN DATA KE VIEW
-    //     // ============================
-
-    //     return view('pages.keuangan.cashflow.index', [
-    //         "title" => 'Laporan Cashflow',
-    //         'tanggal_hari_ini' => $today,
-    //         'tanggal' => $tanggal,
-    //         "saldo_awal" => $saldo_awal,
-    //         "data" => $data
-    //     ]);
-    // }
     
     
     public function cashflow(Request $request)
@@ -347,60 +284,6 @@ class LaporanKeuanganController extends Controller
         $mpdf->Output('Laporan_Cashflow_' . $tanggal_mulai . '_sampai_' . $tanggal_akhir . '.pdf', \Mpdf\Output\Destination::INLINE);
     }
     
-
-    // public function labaRugi(Request $request)
-    // {
-    //     Carbon::setLocale('id');
-    //     $today = Carbon::now()->translatedFormat('d F Y');
-    //     $tanggal_mulai = $request->tanggal_mulai;
-    //     $tanggal_akhir = $request->tanggal_akhir;
-    //     $tanggal = now()->toDateString();
-
-    //     $dataPemasukan = DB::table('item_pemasukan as i')
-    //         ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-    //         ->select(
-    //             'i.produk',
-    //             'i.satuan',
-    //             DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-    //         )->whereBetween(
-    //             't.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir]
-    //         )->groupBy(
-    //             'i.produk', 
-    //             'i.satuan'
-    //         )->orderBy('i.produk', 'asc')->get();
-
-
-    //     $totalOmsetPemasukan = $dataPemasukan->sum('omset');
-
-        
-
-    //     $dataPengeluaran = DB::table('transaksi_pengeluaran as t')
-    //         ->select(
-    //             't.jenis_pengeluaran',
-    //             DB::raw('SUM(t.jumlah) as total_pengeluaran')
-    //         )
-    //         ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-    //         ->groupBy('t.jenis_pengeluaran')
-    //         ->orderBy('t.jenis_pengeluaran', 'asc')
-    //         ->get();
-
-    //     $totalPengeluaran = $dataPengeluaran->sum('total_pengeluaran');
-
-    //     $total =  $totalOmsetPemasukan - $totalPengeluaran;
-
-    //     return view('pages.keuangan.labaRugi.index', [
-    //         'title' => 'Laporan Laba Rugi',
-    //         'tanggal_hari_ini' => $today,
-    //         'tanggal' => $tanggal,
-    //         'pemasukan' => $dataPemasukan,
-    //         'total_omset_pemasukan' => $totalOmsetPemasukan,
-    //         'pengeluaran' => $dataPengeluaran,
-    //         'total_pengeluaran' => $totalPengeluaran,
-    //         'total' => $total
-    //     ]);
-    // }
-
-    
     public function labaRugi(Request $request)
     {
         Carbon::setLocale('id');
@@ -408,20 +291,6 @@ class LaporanKeuanganController extends Controller
         $tanggal_mulai = $request->tanggal_mulai;
         $tanggal_akhir = $request->tanggal_akhir;
         $tanggal = now()->toDateString();
-
-        // $dataPemasukan = DB::table('item_pemasukan as i')
-        //     ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-        //     ->select(
-        //         'i.produk',
-        //         'i.satuan',
-        //         DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-        //     )->whereBetween(
-        //         't.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir]
-        //     )->groupBy(
-        //         'i.produk', 
-        //         'i.satuan',
-        //     )->orderBy('i.produk', 'asc')->get();
-
         
         $queryPemasukan = DB::table('item_pemasukan as i')
             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
@@ -556,20 +425,6 @@ class LaporanKeuanganController extends Controller
         $today = Carbon::now()->translatedFormat('d F Y');
         $tanggal_mulai = $request->tanggal_mulai;
         $tanggal_akhir = $request->tanggal_akhir;
-
-        // $dataPemasukan = DB::table('item_pemasukan as i')
-        //     ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-        //     ->select(
-        //         'i.produk',
-        //         'i.satuan',
-        //         DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-        //     )->whereBetween(
-        //         't.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir]
-        //     )->groupBy(
-        //         'i.produk', 
-        //         'i.satuan'
-        //     )->orderBy('i.produk', 'asc')->get();
-
 
         $queryPemasukan = DB::table('item_pemasukan as i')
             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')

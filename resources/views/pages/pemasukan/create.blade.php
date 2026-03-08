@@ -71,9 +71,22 @@
                                 @foreach ($produkOld as $i => $p)
                                     <div class="row mb-1 produk-row">
                                         <div class="col-3">
-                                            <input type="text" name="produk[]"
+                                            {{-- <input type="text" name="produk[]"
                                                 class="form-control @error('produk.*') is-invalid @enderror"
-                                                value="{{ old('produk.' . $i) }}" placeholder="Masukkan produk" required>
+                                                value="{{ old('produk.' . $i) }}" placeholder="Masukkan produk" required> --}}
+                                            <select name="produk[]"
+                                                class="form-select produk-select @error('produk.' . $i) is-invalid @enderror"
+                                                required>
+                                                <option value="">Pilih Produk</option>
+                                                @foreach ($daftar_produk as $produk)
+                                                    <option value="{{ $produk->nama_produk }}"
+                                                        data-harga="{{ $produk->harga_satuan_normal }}"
+                                                        data-satuan="{{ $produk->satuan }}"
+                                                        {{ old('produk.' . $i) == $produk->nama_produk ? 'selected' : '' }}>
+                                                        {{ $produk->nama_produk }} ({{ $produk->satuan }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="col-2">
                                             <input type="number" step="0.01" name="kuantitas[]"
@@ -84,7 +97,7 @@
                                         <div class="col-2">
                                             <input type="text" name="satuan[]"
                                                 class="form-control @error('satuan.*') is-invalid @enderror"
-                                                value="{{ old('satuan.' . $i) }}" placeholder="Masukkan satuan" required>
+                                                value="{{ old('satuan.' . $i) }}" placeholder="Masukkan satuan" readonly>
                                         </div>
                                         <div class="col-2">
                                             <input type="text" name="harga_satuan[]"
@@ -122,7 +135,7 @@
                                             <path d="M12 5l0 14" />
                                             <path d="M5 12l14 0" />
                                         </svg>
-                                        Tambah Produk
+                                        Tambah Item
                                     </a>
                                 </div>
                             </div>
@@ -162,7 +175,6 @@
     </div>
     <!-- END PAGE BODY -->
     <script>
-        // Convert number to Rp format
         function formatRupiah(angka) {
             return new Intl.NumberFormat('id-ID', {
                 style: 'currency',
@@ -177,35 +189,28 @@
             const totalDisplay = document.getElementById("total-keseluruhan");
             const totalInput = document.getElementById("total_keseluruhan_input");
 
-            // Format harga on typing
-            document.addEventListener("input", function(e) {
-                if (e.target.classList.contains("harga-format")) {
-                    let clean = e.target.value.replace(/[^0-9]/g, "");
-                    e.target.value = clean ? formatRupiah(clean) : "";
-                }
-            });
-
-            // Update jumlah in a row
+            // hitung jumlah per row
             function updateJumlah(row) {
-                let qty = parseFloat(row.querySelector('input[name="kuantitas[]"]').value) || 0;
-                let hargaText = row.querySelector('input[name="harga_satuan[]"]').value;
 
-                // Extract raw number from Rp text
-                let harga = parseFloat(hargaText.replace(/[^0-9]/g, "")) || 0;
+                let qty = parseFloat(row.querySelector('[name="kuantitas[]"]').value) || 0;
+                let hargaText = row.querySelector('[name="harga_satuan[]"]').value;
 
-                let jumlahInput = row.querySelector(".jumlah");
+                let harga = parseFloat(hargaText.replace(/[^0-9]/g, '')) || 0;
+
                 let jumlah = qty * harga;
-                jumlahInput.value = formatRupiah(jumlah);
+
+                row.querySelector(".jumlah").value = formatRupiah(jumlah);
 
                 updateTotal();
             }
 
-            // Update total keseluruhan
+            // hitung total keseluruhan
             function updateTotal() {
+
                 let total = 0;
 
-                document.querySelectorAll(".jumlah").forEach(j => {
-                    let raw = j.value.replace(/[^0-9]/g, "");
+                document.querySelectorAll(".jumlah").forEach(el => {
+                    let raw = el.value.replace(/[^0-9]/g, '');
                     total += parseInt(raw) || 0;
                 });
 
@@ -213,39 +218,83 @@
                 totalInput.value = total;
             }
 
-            // Detect changes in row
+            // event dalam container
             container.addEventListener("input", function(e) {
+
+                if (e.target.classList.contains("harga-format")) {
+                    let clean = e.target.value.replace(/[^0-9]/g, "");
+                    e.target.value = clean ? formatRupiah(clean) : "";
+                }
+
                 if (
                     e.target.name === "kuantitas[]" ||
                     e.target.name === "harga_satuan[]"
                 ) {
                     updateJumlah(e.target.closest(".produk-row"));
                 }
+
             });
 
-            // Add new product row
+            // ketika produk dipilih
+            container.addEventListener("change", function(e) {
+
+                if (e.target.classList.contains("produk-select")) {
+
+                    let row = e.target.closest(".produk-row");
+
+                    let hargaInput = row.querySelector('[name="harga_satuan[]"]');
+                    let satuanInput = row.querySelector('[name="satuan[]"]');
+
+                    let selected = e.target.selectedOptions[0];
+
+                    let harga = selected.dataset.harga;
+                    let satuan = selected.dataset.satuan;
+
+                    if (harga) {
+                        hargaInput.value = formatRupiah(harga);
+                    }
+
+                    if (satuan) {
+                        satuanInput.value = satuan;
+                    }
+
+                    updateJumlah(row);
+                }
+
+            });
+
+
+            // tambah produk
             document.getElementById("btn-tambah-produk").addEventListener("click", function(e) {
+
                 e.preventDefault();
 
-                let original = container.querySelector(".produk-row");
-                let clone = original.cloneNode(true);
+                let clone = container.querySelector(".produk-row").cloneNode(true);
 
                 clone.querySelectorAll("input").forEach(input => {
                     input.value = "";
                 });
 
+                clone.querySelector("select").selectedIndex = 0;
+
                 container.appendChild(clone);
+
             });
 
-            // Delete row
+            // hapus produk
             container.addEventListener("click", function(e) {
+
                 if (e.target.closest(".btn-remove")) {
+
                     let rows = container.querySelectorAll(".produk-row");
+
                     if (rows.length > 1) {
                         e.target.closest(".produk-row").remove();
                         updateTotal();
                     }
+
                 }
+
             });
 
         });

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+// use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         // $this->call(PemasukanSeeder::class);
-         $this->call(TransaksiPemasukanSeeder::class);
-        // $this->call(PengeluaranSeeder::class);
+        // $this->call(TransaksiPemasukanSeeder::class);
+        $this->call(PengeluaranSeeder::class);
     }
 }

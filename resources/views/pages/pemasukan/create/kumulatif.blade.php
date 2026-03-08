@@ -29,7 +29,8 @@
                         </h3>
                     </div> --}}
                     <div class="card-body">
-                        <form class="space-y" method="POST" action="/create/kumulatif/pemasukan" enctype="multipart/form-data">
+                        <form class="space-y" method="POST" action="/create/kumulatif/pemasukan"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="row mt-2">
                                 <div class="col-6">
@@ -59,23 +60,36 @@
                                         <div class="col-2">
                                             <input type="text" name="pelanggan[]"
                                                 class="form-control @error('pelanggan.*') is-invalid @enderror"
-                                                value="{{ old('pelanggan.' . $i) }}" placeholder="Masukkan pelanggan" required>
+                                                value="{{ old('pelanggan.' . $i) }}" placeholder="Masukkan pelanggan"
+                                                required>
                                         </div>
                                         <div class="col-2">
-                                            <input type="text" name="produk[]"
+                                            {{-- <input type="text" name="produk[]"
                                                 class="form-control @error('produk.*') is-invalid @enderror"
-                                                value="{{ old('produk.' . $i) }}" placeholder="Masukkan produk" required>
+                                                value="{{ old('produk.' . $i) }}" placeholder="Masukkan produk" required> --}}
+                                            <select name="produk[]"
+                                                class="form-select produk-select @error('produk.' . $i) is-invalid @enderror"
+                                                required>
+                                                <option value="">Pilih Produk</option>
+                                                @foreach ($daftar_produk as $produk)
+                                                    <option value="{{ $produk->nama_produk }}"
+                                                        data-harga="{{ $produk->harga_satuan_normal }}"
+                                                        data-satuan="{{ $produk->satuan }}"
+                                                        {{ old('produk.' . $i) == $produk->nama_produk ? 'selected' : '' }}>
+                                                        {{ $produk->nama_produk }} ({{ $produk->satuan }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="col-1">
                                             <input type="number" step="0.01" name="kuantitas[]"
                                                 class="form-control @error('kuantitas.*') is-invalid @enderror"
-                                                value="{{ old('kuantitas.' . $i) }}" placeholder="Qty"
-                                                required>
+                                                value="{{ old('kuantitas.' . $i) }}" placeholder="Qty" required>
                                         </div>
                                         <div class="col-2">
                                             <input type="text" name="satuan[]"
                                                 class="form-control @error('satuan.*') is-invalid @enderror"
-                                                value="{{ old('satuan.' . $i) }}" placeholder="Masukkan satuan" required>
+                                                value="{{ old('satuan.' . $i) }}" placeholder="Masukkan satuan" readonly>
                                         </div>
                                         <div class="col-2">
                                             <input type="text" name="harga_satuan[]"
@@ -145,6 +159,31 @@
 
             const container = document.getElementById("transaksi-container");
 
+
+            // Saat produk dipilih
+            container.addEventListener("change", function(e) {
+
+                if (e.target.classList.contains("produk-select")) {
+
+                    let row = e.target.closest(".transaksi-row");
+                    let selected = e.target.options[e.target.selectedIndex];
+
+                    let harga = selected.dataset.harga || 0;
+                    let satuan = selected.dataset.satuan || "";
+
+                    // isi satuan
+                    row.querySelector('input[name="satuan[]"]').value = satuan;
+
+                    // isi harga
+                    row.querySelector('input[name="harga_satuan[]"]').value = harga ? formatRupiah(harga) :
+                        "";
+
+                    // update jumlah
+                    updateJumlah(row);
+                }
+
+            });
+
             // Format harga on typing
             document.addEventListener("input", function(e) {
                 if (e.target.classList.contains("harga-format")) {
@@ -166,7 +205,7 @@
                 jumlahInput.value = formatRupiah(jumlah);
             }
 
-           
+
             // Detect changes in row
             container.addEventListener("input", function(e) {
                 if (
@@ -186,6 +225,10 @@
 
                 clone.querySelectorAll("input").forEach(input => {
                     input.value = "";
+                });
+
+                clone.querySelectorAll("select").forEach(select => {
+                    select.selectedIndex = 0;
                 });
 
                 container.appendChild(clone);

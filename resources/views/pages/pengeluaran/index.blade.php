@@ -50,128 +50,194 @@
                 </div>
             @endif
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Daftar Transaksi Pengeluaran</h3>
-                    </div>
-                    <div class="card-body border-bottom py-3">
-                        <form method="GET" action="/pengeluaran" class="d-flex flex-wrap align-items-end gap-3">
+                <div class="col-12 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a href="#tabs-transaksi-pengeluaran" class="nav-link active" data-bs-toggle="tab"
+                                        aria-selected="true"
+                                        role="tab"><!-- Download SVG icon from http://tabler.io/icons/icon/home -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="icon me-2 icon-2">
+                                            <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                                            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                                            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                                        </svg>Daftar Transaksi Pengeluaran</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a href="#tabs-items" class="nav-link" data-bs-toggle="tab" aria-selected="false"
+                                        tabindex="-1"
+                                        role="tab"><!-- Download SVG icon from http://tabler.io/icons/icon/user -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-album">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12" />
+                                            <path d="M12 4v7l2 -2l2 2v-7" />
+                                        </svg>Daftar Jenis & Item Pengeluaran</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="tab-pane active show" id="tabs-transaksi-pengeluaran" role="tabpanel">
+                                    <form method="GET" action="/pengeluaran"
+                                        class="d-flex flex-wrap align-items-end gap-3">
 
-                            <div class="text-secondary">
-                                <label class="form-label fw-semibold mb-1">Show</label>
-                                <input type="number" name="show" class="form-control form-control-sm d-inline w-auto"
-                                    value="{{ request('show', 10) }}">
-                                entries
-                            </div>
-                            <div class="ms-auto">
-                                <div class="d-flex flex-wrap align-items-end gap-3">
+                                        <div class="text-secondary">
+                                            <label class="form-label fw-semibold mb-1">Show</label>
+                                            <input type="number" name="show"
+                                                class="form-control form-control-sm d-inline w-auto"
+                                                value="{{ request('show', 10) }}">
+                                            entries
+                                        </div>
+                                        <div class="ms-auto">
+                                            <div class="d-flex flex-wrap align-items-end gap-3">
 
-                                    <div>
-                                        <label class="form-label fw-semibold mb-1">Tanggal Mulai</label>
-                                        <input type="date" name="tanggal_mulai" class="form-control"
-                                            value="{{ request('tanggal_mulai') }}">
-                                    </div>
+                                                <div>
+                                                    <label class="form-label fw-semibold mb-1">Tanggal Mulai</label>
+                                                    <input type="date" name="tanggal_mulai" class="form-control"
+                                                        value="{{ request('tanggal_mulai') }}">
+                                                </div>
 
-                                    <div>
-                                        <label class="form-label fw-semibold mb-1">Tanggal Akhir</label>
-                                        <input type="date" name="tanggal_akhir" class="form-control"
-                                            value="{{ request('tanggal_akhir') }}">
-                                    </div>
+                                                <div>
+                                                    <label class="form-label fw-semibold mb-1">Tanggal Akhir</label>
+                                                    <input type="date" name="tanggal_akhir" class="form-control"
+                                                        value="{{ request('tanggal_akhir') }}">
+                                                </div>
 
-                                    <div>
-                                        <label class="form-label fw-semibold mb-1">Search</label>
-                                        <input type="text" name="search" class="form-control" placeholder="Cari..."
-                                            value="{{ request('search') }}">
-                                    </div>
+                                                <div>
+                                                    <label class="form-label fw-semibold mb-1">Search</label>
+                                                    <input type="text" name="search" class="form-control"
+                                                        placeholder="Cari..." value="{{ request('search') }}">
+                                                </div>
 
-                                    <div>
-                                        <button class="btn btn-primary" type="submit">Filter</button>
-                                    </div>
+                                                <div>
+                                                    <button class="btn btn-primary" type="submit">Filter</button>
+                                                </div>
 
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-selectable card-table table-vcenter text-nowrap datatable">
-                            <thead>
-                                <tr>
-                                    <th class="w-1">Tanggal
-                                        <!-- Download SVG icon from http://tabler.io/icons/icon/chevron-up -->
-                                        {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="table-responsive mt-3">
+                                        <table
+                                            class="table table-selectable card-table table-vcenter text-nowrap datatable">
+                                            <thead>
+                                                <tr>
+                                                    <th class="w-1">Tanggal
+                                                        <!-- Download SVG icon from http://tabler.io/icons/icon/chevron-up -->
+                                                        {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round"
                                             class="icon icon-sm icon-thick icon-2">
                                             <path d="M6 15l6 -6l6 6"></path>
                                         </svg> --}}
-                                    </th>
-                                    <th>Jenis Pengeluaran</th>
-                                    <th>Nama Item</th>
-                                    <th>Keterangan</th>
-                                    <th>Kuantitas</th>
-                                    <th>Harga per-Item</th>
-                                    <th>Jumlah</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($daftar_pengeluaran as $pengeluaran)
-                                    <tr>
-                                        <td><span
-                                                class="text-secondary">{{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d M Y') }}</span>
-                                        </td>
-                                        <td>
-                                            {{ $pengeluaran->jenis_pengeluaran }}
-                                        </td>
-                                        <td>
-                                            {{ $pengeluaran->nama_item }}
-                                        </td>
-                                        <td>
-                                            {{ $pengeluaran->keterangan }}
-                                        </td>
-                                        <td>
-                                            @if (fmod($pengeluaran->kuantitas, 1) == 0)
-                                                {{ number_format($pengeluaran->kuantitas, 0, ',', '.') }}
-                                            @else
-                                                {{ number_format($pengeluaran->kuantitas, 2, ',', '.') }}
-                                            @endif
-                                        </td>
-                                        <td>Rp {{ number_format($pengeluaran->harga_per_item, 0, ',', '.') }}</td>
-                                        <td>Rp {{ number_format($pengeluaran->jumlah, 0, ',', '.') }}</td>
-                                        <td class="text-end">
-                                            <div class="btn-list flex-nowrap justify-content-end">
-                                                <a href="#" class="btn btn-outline-warning" data-bs-toggle="modal"
-                                                    data-bs-target="#modal-edit" data-id="{{ $pengeluaran->id }}"
-                                                    data-tanggal="{{ $pengeluaran->tanggal }}"
-                                                    data-jenis="{{ $pengeluaran->jenis_pengeluaran }}"
-                                                    data-nama="{{ $pengeluaran->nama_item }}"
-                                                    data-ket="{{ $pengeluaran->keterangan }}"
-                                                    data-kuantitas="{{ $pengeluaran->kuantitas }}"
-                                                    data-harga="{{ $pengeluaran->harga_per_item }}">
-                                                    Edit
-                                                </a>
-                                                <a href="#" class="btn btn-outline-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#modal-delete" data-id="{{ $pengeluaran->id }}">
-                                                    Hapus
-                                                </a>
+                                                    </th>
+                                                    <th>Jenis Pengeluaran</th>
+                                                    <th>Nama Item</th>
+                                                    <th>Keterangan</th>
+                                                    <th>Kuantitas</th>
+                                                    <th>Harga per-Item</th>
+                                                    <th>Jumlah</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($daftar_pengeluaran as $pengeluaran)
+                                                    <tr>
+                                                        <td><span
+                                                                class="text-secondary">{{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d M Y') }}</span>
+                                                        </td>
+                                                        <td>
+                                                            {{ $pengeluaran->jenis_pengeluaran }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $pengeluaran->nama_item }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $pengeluaran->keterangan }}
+                                                        </td>
+                                                        <td>
+                                                            @if (fmod($pengeluaran->kuantitas, 1) == 0)
+                                                                {{ number_format($pengeluaran->kuantitas, 0, ',', '.') }}
+                                                            @else
+                                                                {{ number_format($pengeluaran->kuantitas, 2, ',', '.') }}
+                                                            @endif
+                                                        </td>
+                                                        <td>Rp
+                                                            {{ number_format($pengeluaran->harga_per_item, 0, ',', '.') }}
+                                                        </td>
+                                                        <td>Rp {{ number_format($pengeluaran->jumlah, 0, ',', '.') }}</td>
+                                                        <td class="text-end">
+                                                            <div class="btn-list flex-nowrap justify-content-end">
+                                                                <a href="#" class="btn btn-outline-warning"
+                                                                    data-bs-toggle="modal" data-bs-target="#modal-edit"
+                                                                    data-id="{{ $pengeluaran->id }}"
+                                                                    data-tanggal="{{ $pengeluaran->tanggal }}"
+                                                                    data-jenis="{{ $pengeluaran->jenis_pengeluaran }}"
+                                                                    data-nama="{{ $pengeluaran->nama_item }}"
+                                                                    data-ket="{{ $pengeluaran->keterangan }}"
+                                                                    data-kuantitas="{{ $pengeluaran->kuantitas }}"
+                                                                    data-harga="{{ $pengeluaran->harga_per_item }}">
+                                                                    Edit
+                                                                </a>
+                                                                <a href="#" class="btn btn-outline-danger"
+                                                                    data-bs-toggle="modal" data-bs-target="#modal-delete"
+                                                                    data-id="{{ $pengeluaran->id }}">
+                                                                    Hapus
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="row g-2 justify-content-center justify-content-sm-between">
+                                            <div class="col-auto d-flex align-items-center">
+                                                <p class="m-0 text-secondary">
+                                                    Showing <strong>{{ $daftar_pengeluaran->firstItem() }}</strong>
+                                                    to <strong>{{ $daftar_pengeluaran->lastItem() }}</strong>
+                                                    of <strong>{{ $daftar_pengeluaran->total() }}</strong> entries
+                                                </p>
                                             </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer">
-                        <div class="row g-2 justify-content-center justify-content-sm-between">
-                            <div class="col-auto d-flex align-items-center">
-                                <p class="m-0 text-secondary">
-                                    Showing <strong>{{ $daftar_pengeluaran->firstItem() }}</strong>
-                                    to <strong>{{ $daftar_pengeluaran->lastItem() }}</strong>
-                                    of <strong>{{ $daftar_pengeluaran->total() }}</strong> entries
-                                </p>
-                            </div>
-                            <div class="col-auto">
-                                {{ $daftar_pengeluaran->links('vendor.pagination.tabler') }}
+                                            <div class="col-auto">
+                                                {{ $daftar_pengeluaran->links('vendor.pagination.tabler') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tabs-items" role="tabpanel">
+                                    <div class="mb-3">
+                                        <a href="#" class="btn btn-success btn-5 d-none d-sm-inline-block">
+                                            <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-2">
+                                                <path d="M12 5l0 14" />
+                                                <path d="M5 12l14 0" />
+                                            </svg>
+                                            Tambah Jenis Pengeluaran
+                                        </a>
+                                        <a href="#" class="btn btn-warning btn-5 d-none d-sm-inline-block">
+                                            <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-2">
+                                                <path d="M12 5l0 14" />
+                                                <path d="M5 12l14 0" />
+                                            </svg>
+                                            Tambah Item Pengeluaran
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -282,7 +348,7 @@
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const editModal = document.getElementById('modal-edit');
 
             function formatRupiah(angka) {
@@ -293,7 +359,7 @@
                 return rp.replace(/[^\d]/g, '');
             }
 
-            editModal.addEventListener('show.bs.modal', function (event) {
+            editModal.addEventListener('show.bs.modal', function(event) {
                 let button = event.relatedTarget;
                 let id = button.getAttribute('data-id');
 
@@ -323,7 +389,7 @@
             }
 
             // Harga per item input
-            document.getElementById('edit_harga_per_item_display').addEventListener('input', function () {
+            document.getElementById('edit_harga_per_item_display').addEventListener('input', function() {
                 let value = unformatRupiah(this.value);
                 this.value = formatRupiah(value);
                 document.getElementById('edit_harga_per_item').value = value;
@@ -333,5 +399,4 @@
             document.getElementById('edit_kuantitas').addEventListener('input', calculateEditJumlah);
         });
     </script>
-
 @endsection

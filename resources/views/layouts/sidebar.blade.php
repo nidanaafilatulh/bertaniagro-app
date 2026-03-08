@@ -66,7 +66,8 @@
                         Request::is('pemasukan*') ||
                         Request::is('pengeluaran*') ||
                         Request::is('rekap/*') ||
-                        Request::is('keuangan/*');
+                        Request::is('keuangan/*') ||
+                        Request::is('produk*');
                 @endphp
 
                 <li class="nav-item dropdown text-dark {{ $isKebunOpen ? 'show' : '' }}">
@@ -97,7 +98,8 @@
                             $isPemasukanOpen =
                                 Request::is('pemasukan*') ||
                                 Request::is('rekap/pemasukan*') ||
-                                Request::is('create/kumulatif/pemasukan*');
+                                Request::is('create/kumulatif/pemasukan*') ||
+                                Request::is('produk*');
                         @endphp
 
                         <div class="dropend {{ $isPemasukanOpen ? 'show' : '' }}">
@@ -108,7 +110,7 @@
 
                             <div class="dropdown-menu {{ $isPemasukanOpen ? 'show' : '' }}">
                                 <a href="/pemasukan"
-                                    class="dropdown-item {{ Request::is('pemasukan*') || Request::is('create/kumulatif/pemasukan*') ? 'active' : '' }}">
+                                    class="dropdown-item {{ Request::is('pemasukan*') || Request::is('create/kumulatif/pemasukan*') || Request::is('produk*')  ? 'active' : '' }}">
                                     Daftar
                                 </a>
 

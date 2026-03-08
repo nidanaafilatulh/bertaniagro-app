@@ -9,6 +9,7 @@ use App\Http\Controllers\RekapPemasukanController;
 use App\Http\Controllers\LaporanKeuanganController;
 use App\Http\Controllers\RekapPengeluaranController;
 use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\ProdukController;
 
 Route::get('/', [AuthenticationController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [AuthenticationController::class, 'login']);
@@ -40,6 +41,9 @@ Route::middleware(['auth', 'role:admin,owner'])->group(function () {
     Route::get('/create/kumulatif/pengeluaran', [PengeluaranController::class, 'kumulatif']);
     Route::post('/create/kumulatif/pengeluaran', [PengeluaranController::class, 'storeKumulatif']);
     Route::resource('/pengeluaran', PengeluaranController::class);
+
+    // percobaan
+    Route::resource('/produk', ProdukController::class);
 });
 
 // 'title' => 'Laporan Laba Rugi',

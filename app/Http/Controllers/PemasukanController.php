@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemPemasukan;
+use App\Models\Produk;
+use App\Models\TransaksiPemasukan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\ItemPemasukan;
-use App\Models\TransaksiPemasukan;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PemasukanController extends Controller
@@ -35,7 +35,8 @@ class PemasukanController extends Controller
     return view('pages.pemasukan.index', [
         'title' => 'Pemasukan',
         'tanggal_hari_ini' => $today,
-        'daftar_pemasukan' => TransaksiPemasukan::latest()
+        'daftar_produk' => Produk::all(),
+        'daftar_pemasukan' => TransaksiPemasukan::latest('tanggal_transaksi')
             ->filter($filters)
             ->paginate($show)
             ->withQueryString()
@@ -59,6 +60,7 @@ class PemasukanController extends Controller
 
         return view('pages.pemasukan.create', [
             'title' => 'Tambah Data Transaksi Pemasukan',
+            'daftar_produk' => Produk::all(),
             'nextNo' => $nextNo,
             'tanggal' => $tanggal
         ]);
@@ -70,6 +72,7 @@ class PemasukanController extends Controller
 
         return view('pages.pemasukan.create.kumulatif', [
             'title' => 'Tambah Data Transaksi Pemasukan',
+            'daftar_produk' => Produk::all(),
             'tanggal' => $tanggal
         ]);
     }

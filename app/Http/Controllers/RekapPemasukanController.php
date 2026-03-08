@@ -454,26 +454,7 @@ class RekapPemasukanController extends Controller
         // Total pemasukan lainnya
         $total_pemasukan_lainnya = $dataLainnya->sum('omset');
 
-        // // ⭐ Total kuantitas harian (group by satuan)
-        // $totalKuantitasHarian = $grouped->map(function ($rows) {
-        //     return $rows->groupBy('satuan')->map(function ($items) {
-        //         return [
-        //             'total_kuantitas' => $items->sum('total_kuantitas'),
-        //             'total_omset'      => $items->sum('omset'),
-        //         ];
-        //     });
-        // });
-
-        // // ⭐ Group by satuan for rowspan
-        // $groupedSatuan = $data->groupBy('satuan');
-
-        // // Total Kuantitas per satuan
-        // $totalKuantitasPerSatuan = $groupedSatuan->map(function ($items) {
-        //     return [
-        //         'total_kuantitas' => $items->sum('total_kuantitas'),
-        //         'total_omset'      => $items->sum('omset'),
-        //     ];
-        // });
+        
 
         $totalPemasukan = $data->sum('omset');
 
