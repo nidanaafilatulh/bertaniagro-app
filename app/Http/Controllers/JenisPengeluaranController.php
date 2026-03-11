@@ -20,7 +20,9 @@ class JenisPengeluaranController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.pengeluaran.jenisPengeluaran.create', [
+            'title' => 'Tambah Jenis Pengeluaran',
+        ]);
     }
 
     /**
@@ -28,7 +30,19 @@ class JenisPengeluaranController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_jenis_pengeluaran.*' => 'required|string|max:255',
+        ]);
+
+        foreach ($request->nama_jenis_pengeluaran as $nama) {
+            JenisPengeluaran::create([
+                'nama' => $nama,
+            ]);
+        }
+
+        return redirect('/pengeluaran')
+            ->with('success', 'Jenis Pengeluaran berhasil ditambahkan.')
+            ->withFragment('tabs-items');;
     }
 
     /**
@@ -60,6 +74,10 @@ class JenisPengeluaranController extends Controller
      */
     public function destroy(JenisPengeluaran $jenisPengeluaran)
     {
-        //
+        JenisPengeluaran::destroy($jenisPengeluaran->id);
+        return redirect()
+            ->to(url()->previous())
+            ->with('success', 'Data jenis pengeluaran berhasil dihapus!')
+            ->withFragment('tabs-items');
     }
 }

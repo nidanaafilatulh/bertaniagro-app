@@ -40,11 +40,21 @@
 
                                 <div class="col-6">
                                     <label class="form-label">Jenis Pengeluaran*</label>
-                                    <input type="text" placeholder="Masukkan jenis pengeluaran"
+                                    {{-- <input type="text" placeholder="Masukkan jenis pengeluaran"
                                         class="form-control @error('jenis_pengeluaran') is-invalid @enderror"
                                         id="jenis_pengeluaran" name="jenis_pengeluaran"
-                                        value="{{ old('jenis_pengeluaran') }}" required>
-
+                                        value="{{ old('jenis_pengeluaran') }}" required> --}}
+                                    <select name="jenis_pengeluaran" id="jenis_pengeluaran"
+                                        class="form-select produk-select @error('jenis_pengeluaran') is-invalid @enderror"
+                                        required>
+                                        <option value="">Pilih Jenis Pengeluaran</option>
+                                        @foreach ($daftar_jenis_pengeluaran as $jenis)
+                                            <option value="{{ $jenis->nama }}" data-jenis="{{ $jenis->nama }}"
+                                                {{ old('jenis_pengeluaran') == $jenis->nama ? 'selected' : '' }}>
+                                                {{ $jenis->nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('jenis_pengeluaran')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -56,10 +66,13 @@
                             <div class="row mt-4">
                                 <div class="col-3">
                                     <label class="form-label">Nama Item*</label>
-                                    <input type="text" placeholder="Masukkan nama item"
+                                    {{-- <input type="text" placeholder="Masukkan nama item"
                                         class="form-control @error('nama_item') is-invalid @enderror" id="nama_item"
-                                        name="nama_item" value="{{ old('nama_item') }}" required>
-
+                                        name="nama_item" value="{{ old('nama_item') }}" required> --}}
+                                    <select name="nama_item" id="nama_item"
+                                        class="form-select produk-select @error('nama_item') is-invalid @enderror" required>
+                                        <option value="">Pilih Nama Item</option>
+                                    </select>
                                     @error('nama_item')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -158,21 +171,42 @@
             hitungJumlah();
         });
     </script>
-    {{-- <script>
-        function formatRupiah(input) {
-            // Remove non-digit characters
-            let value = input.value.replace(/[^0-9]/g, "");
+    <script>
+        const dataJenis = @json($daftar_jenis_pengeluaran);
 
-            if (value === "") {
-                input.value = "";
-                return;
-            }
+        document.addEventListener("DOMContentLoaded", function() {
 
-            // Format number with thousand separators
-            let formatted = new Intl.NumberFormat('id-ID').format(value);
+            const jenisSelect = document.getElementById("jenis_pengeluaran");
+            const itemSelect = document.getElementById("nama_item");
 
-            // Add "Rp " prefix
-            input.value = "Rp " + formatted;
-        }
-    </script> --}}
+            jenisSelect.addEventListener("change", function() {
+
+                let selectedJenis = this.value;
+
+                // reset dropdown item
+                itemSelect.innerHTML = '<option value="">Pilih Nama Item</option>';
+
+                if (!selectedJenis) return;
+
+                // cari jenis yang dipilih
+                let jenis = dataJenis.find(j => j.nama === selectedJenis);
+
+                if (jenis && jenis.item_pengeluaran) {
+
+                    jenis.item_pengeluaran.forEach(item => {
+
+                        let option = document.createElement("option");
+                        option.value = item.nama;
+                        option.textContent = item.nama;
+
+                        itemSelect.appendChild(option);
+
+                    });
+
+                }
+
+            });
+
+        });
+    </script>
 @endsection

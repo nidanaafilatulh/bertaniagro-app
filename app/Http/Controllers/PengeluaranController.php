@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+// use App\Models\ItemPengeluaran;
+use App\Models\JenisPengeluaran;
+use App\Models\TransaksiPengeluaran;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\DB;
-use App\Models\TransaksiPengeluaran;
+
 
 class PengeluaranController extends Controller
 {
@@ -30,9 +32,12 @@ class PengeluaranController extends Controller
             'search' => request('search'),
         ];
 
+        $daftar_jenis_pengeluaran = JenisPengeluaran::with('itemPengeluaran')->get();
+
         return view('pages.pengeluaran.index', [
             'title' => 'Daftar Pengeluaran',
             'tanggal_hari_ini' => $today,
+            'daftar_jenis_pengeluaran' => $daftar_jenis_pengeluaran,
             'daftar_pengeluaran' => TransaksiPengeluaran::latest('tanggal')
                                                         ->filter($filters)
                                                         ->paginate($show)
@@ -49,6 +54,7 @@ class PengeluaranController extends Controller
 
         return view('pages.pengeluaran.create', [
             'title' => 'Tambah Data Transaksi Pengeluaran', 
+            'daftar_jenis_pengeluaran' => JenisPengeluaran::with('itemPengeluaran')->get(),
             'tanggal' => $tanggal
         ]);
     }

@@ -1,15 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\OwnerDashboardController;
-use App\Http\Controllers\RekapPemasukanController;
+use App\Http\Controllers\ItemPengeluaranController;
+use App\Http\Controllers\JenisPengeluaranController;
 use App\Http\Controllers\LaporanKeuanganController;
-use App\Http\Controllers\RekapPengeluaranController;
+use App\Http\Controllers\OwnerDashboardController;
+use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\RekapPemasukanController;
+use App\Http\Controllers\RekapPengeluaranController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticationController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [AuthenticationController::class, 'login']);
@@ -44,6 +46,8 @@ Route::middleware(['auth', 'role:admin,owner'])->group(function () {
 
     // percobaan
     Route::resource('/produk', ProdukController::class);
+    Route::resource('/item-pengeluaran', ItemPengeluaranController::class);
+    Route::resource('/jenis-pengeluaran', JenisPengeluaranController::class);
 });
 
 // 'title' => 'Laporan Laba Rugi',

@@ -67,7 +67,9 @@
                         Request::is('pengeluaran*') ||
                         Request::is('rekap/*') ||
                         Request::is('keuangan/*') ||
-                        Request::is('produk*');
+                        Request::is('produk*') ||
+                        Request::is('jenis-pengeluaran*')||
+                        Request::is('item-pengeluaran*');
                 @endphp
 
                 <li class="nav-item dropdown text-dark {{ $isKebunOpen ? 'show' : '' }}">
@@ -132,7 +134,9 @@
                             $isPengeluaranOpen =
                                 Request::is('pengeluaran*') ||
                                 Request::is('rekap/pengeluaran*') ||
-                                Request::is('create/kumulatif/pengeluaran*');
+                                Request::is('create/kumulatif/pengeluaran*') ||
+                                Request::is('jenis-pengeluaran*')||
+                                Request::is('item-pengeluaran*');
                         @endphp
 
                         <div class="dropend {{ $isPengeluaranOpen ? 'show' : '' }}">
