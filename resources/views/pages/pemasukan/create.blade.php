@@ -59,8 +59,7 @@
                             <div class="row mt-4">
                                 <div class="col-3"><label class="form-label">Produk*</label></div>
                                 <div class="col-2"><label class="form-label">Kuantitas*</label></div>
-                                <div class="col-2"><label class="form-label">Satuan*</label></div>
-                                <div class="col-2"><label class="form-label">Harga Satuan*</label></div>
+                                <div class="col-3"><label class="form-label">Harga Satuan*</label></div>
                                 <div class="col-3"><label class="form-label">Jumlah</label></div>
                             </div>
                             <div id="produk-container">
@@ -79,10 +78,10 @@
                                                 required>
                                                 <option value="">Pilih Produk</option>
                                                 @foreach ($daftar_produk as $produk)
-                                                    <option value="{{ $produk->nama_produk }}"
+                                                    <option value="{{ $produk->id }}"
                                                         data-harga="{{ $produk->harga_satuan_normal }}"
                                                         data-satuan="{{ $produk->satuan }}"
-                                                        {{ old('produk.' . $i) == $produk->nama_produk ? 'selected' : '' }}>
+                                                        {{ old('produk.' . $i) == $produk->id ? 'selected' : '' }}>
                                                         {{ $produk->nama_produk }} ({{ $produk->satuan }})
                                                     </option>
                                                 @endforeach
@@ -94,18 +93,13 @@
                                                 value="{{ old('kuantitas.' . $i) }}" placeholder="Masukkan kuantitas"
                                                 required>
                                         </div>
-                                        <div class="col-2">
-                                            <input type="text" name="satuan[]"
-                                                class="form-control @error('satuan.*') is-invalid @enderror"
-                                                value="{{ old('satuan.' . $i) }}" placeholder="Masukkan satuan" readonly>
-                                        </div>
-                                        <div class="col-2">
+                                        <div class="col-3">
                                             <input type="text" name="harga_satuan[]"
                                                 class="form-control harga-format @error('harga_satuan.*') is-invalid @enderror"
                                                 value="{{ old('harga_satuan.' . $i) }}" placeholder="Masukkan harga satuan"
                                                 required>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-3">
                                             <input type="text" class="form-control jumlah" name="jumlah[]"
                                                 value="{{ old('jumlah.' . $i) }}" readonly>
                                         </div>
@@ -243,19 +237,13 @@
                     let row = e.target.closest(".produk-row");
 
                     let hargaInput = row.querySelector('[name="harga_satuan[]"]');
-                    let satuanInput = row.querySelector('[name="satuan[]"]');
 
                     let selected = e.target.selectedOptions[0];
 
                     let harga = selected.dataset.harga;
-                    let satuan = selected.dataset.satuan;
 
                     if (harga) {
                         hargaInput.value = formatRupiah(harga);
-                    }
-
-                    if (satuan) {
-                        satuanInput.value = satuan;
                     }
 
                     updateJumlah(row);

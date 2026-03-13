@@ -22,10 +22,22 @@ class TransaksiPengeluaran extends Model
         // 🔍 SEARCH
         if ($filters['search'] ?? false) {
             $search = $filters['search'];
+
             $query->where(function ($query) use ($search) {
-                $query->where('jenis_pengeluaran', 'like', "%$search%")
-                    ->orWhere('nama_item', 'like', "%$search%")
-                    ->orWhere('keterangan', 'like', "%$search%");
+
+                // cari di keterangan
+                $query->where('keterangan', 'like', "%{$search}%")
+
+                    // cari di nama item
+                    ->orWhereHas('itemPengeluaran', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%{$search}%");
+                    })
+
+                    // cari di jenis pengeluaran
+                    ->orWhereHas('itemPengeluaran.jenisPengeluaran', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%{$search}%");
+                    });
+
             });
         }
 
@@ -40,5 +52,8 @@ class TransaksiPengeluaran extends Model
         }
     }
 
-
+    public function itemPengeluaran()
+    {
+        return $this->belongsTo(ItemPengeluaran::class, 'id_item');
+    }
 }

@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transaksi_pemasukan', function (Blueprint $table) {
-            $table->integer('no_transaksi')->primary()->autoIncrement();
+            $table->unsignedBigInteger('no_transaksi')->primary()->autoIncrement();
             $table->date('tanggal_transaksi');
             $table->string('pelanggan');
             $table->string('bukti_bayar')->nullable();
-            $table->integer('jumlah');
+            $table->unsignedBigInteger('jumlah');
             $table->timestamps();
         });
     }

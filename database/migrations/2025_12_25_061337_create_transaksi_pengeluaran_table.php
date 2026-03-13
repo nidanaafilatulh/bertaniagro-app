@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('transaksi_pengeluaran', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');                       // Tanggal
-            $table->string('jenis_pengeluaran');          // Jenis Pengeluaran
-            $table->string('nama_item');                  // Nama Item
+            $table->unsignedBigInteger('id_item');                  // Nama Item
+            $table->foreign('id_item')
+                ->references('id')
+                ->on('item_pengeluaran')
+                ->onDelete('cascade');
             $table->string('keterangan')->nullable();    // Keterangan
             $table->decimal('kuantitas', 10, 2);                // Kuantitas
             $table->integer('harga_per_item');           // Harga per-Item

@@ -36,7 +36,7 @@ class PemasukanController extends Controller
         'title' => 'Pemasukan',
         'tanggal_hari_ini' => $today,
         'daftar_produk' => Produk::all(),
-        'daftar_pemasukan' => TransaksiPemasukan::latest('tanggal_transaksi')
+        'daftar_pemasukan' => TransaksiPemasukan::latest()
             ->filter($filters)
             ->paginate($show)
             ->withQueryString()
@@ -131,9 +131,8 @@ class PemasukanController extends Controller
         for ($i = 0; $i < count($request->produk); $i++) {
             ItemPemasukan::create([
                 'no_transaksi' => $transaksi->no_transaksi,
-                'produk'       => $request->produk[$i],
+                'id_produk'    => $request->produk[$i],
                 'kuantitas'    => $request->kuantitas[$i],
-                'satuan'       => $request->satuan[$i],
                 'harga_satuan' => $request->harga_satuan[$i], // now clean integer
             ]);
         }
@@ -167,7 +166,6 @@ class PemasukanController extends Controller
             'pelanggan.*'          => 'required|string',
             'produk.*'           => 'required|string',
             'kuantitas.*'        => 'required|numeric|min:0.01',
-            'satuan.*'           => 'required|string',
             'harga_satuan.*'     => 'required|numeric|min:0',
             'jumlah.*'           => 'required|numeric|min:0',
         ]);
@@ -183,9 +181,8 @@ class PemasukanController extends Controller
 
             ItemPemasukan::create([
                 'no_transaksi' => $transaksi->no_transaksi,
-                'produk'       => $request->produk[$i],
+                'id_produk'       => $request->produk[$i],
                 'kuantitas'    => $request->kuantitas[$i],
-                'satuan'       => $request->satuan[$i],
                 'harga_satuan' => $request->harga_satuan[$i], // now clean integer
             ]);
         }

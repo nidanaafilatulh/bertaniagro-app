@@ -17,4 +17,9 @@ class ItemPengeluaran extends Model
     {
         return $this->belongsTo(JenisPengeluaran::class, 'jenis_pengeluaran_id');
     }
+
+    public function transaksiPengeluaran()
+    {
+        return $this->hasMany(TransaksiPengeluaran::class, 'id_item');
+    }
 }

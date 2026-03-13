@@ -161,12 +161,12 @@
                                                         <td>Rp {{ number_format($pemasukan->jumlah, 0, ',', '.') }}</td>
                                                         <td>
                                                             @if ($pemasukan->itemPemasukan->count() == 1)
-                                                                {{ $pemasukan->itemPemasukan[0]->produk }}
-                                                                ({{ $pemasukan->itemPemasukan[0]->satuan }})
+                                                                {{ $pemasukan->itemPemasukan[0]->produk->nama_produk }}
+                                                                ({{ $pemasukan->itemPemasukan[0]->produk->satuan }})
                                                                 <br>
                                                             @elseif ($pemasukan->itemPemasukan->count() > 1)
                                                                 @foreach ($pemasukan->itemPemasukan as $item)
-                                                                    - {{ $item->produk }} ({{ $item->satuan }})<br>
+                                                                    - {{ $item->produk->nama_produk }} ({{ $item->produk->satuan }})<br>
                                                                 @endforeach
                                                             @endif
                                                         </td>

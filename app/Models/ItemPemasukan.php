@@ -17,4 +17,9 @@ class ItemPemasukan extends Model
     {
         return $this->belongsTo(TransaksiPemasukan::class, 'no_transaksi', 'no_transaksi');
     }
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'id_produk', 'id');
+    }
 }

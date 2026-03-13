@@ -196,7 +196,7 @@
                     jenis.item_pengeluaran.forEach(item => {
 
                         let option = document.createElement("option");
-                        option.value = item.nama;
+                        option.value = item.id;
                         option.textContent = item.nama;
 
                         itemSelect.appendChild(option);

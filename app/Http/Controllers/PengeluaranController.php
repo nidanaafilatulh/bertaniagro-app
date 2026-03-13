@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-// use App\Models\ItemPengeluaran;
 use App\Models\JenisPengeluaran;
 use App\Models\TransaksiPengeluaran;
 use Carbon\Carbon;
@@ -33,12 +32,12 @@ class PengeluaranController extends Controller
         ];
 
         $daftar_jenis_pengeluaran = JenisPengeluaran::with('itemPengeluaran')->get();
-
+        
         return view('pages.pengeluaran.index', [
             'title' => 'Daftar Pengeluaran',
             'tanggal_hari_ini' => $today,
             'daftar_jenis_pengeluaran' => $daftar_jenis_pengeluaran,
-            'daftar_pengeluaran' => TransaksiPengeluaran::latest('tanggal')
+            'daftar_pengeluaran' => TransaksiPengeluaran::latest()
                                                         ->filter($filters)
                                                         ->paginate($show)
                                                         ->withQueryString(),
@@ -65,6 +64,7 @@ class PengeluaranController extends Controller
 
         return view('pages.pengeluaran.create.kumulatif', [
             'title' => 'Tambah Data Transaksi Pengeluaran Kumulatif',
+            'daftar_jenis_pengeluaran' => JenisPengeluaran::with('itemPengeluaran')->get(),
             'tanggal' => $tanggal
         ]);
     }
@@ -92,7 +92,14 @@ class PengeluaranController extends Controller
 
         $validated['jumlah'] = $validated['kuantitas'] * $validated['harga_per_item'];
 
-        TransaksiPengeluaran::create($validated);
+        TransaksiPengeluaran::create([
+            'tanggal'           => $validated['tanggal'],
+            'id_item'           => $validated['nama_item'],
+            'keterangan'        => $validated['keterangan'] ?? null,
+            'kuantitas'         => $validated['kuantitas'],
+            'harga_per_item'    => $validated['harga_per_item'],
+            'jumlah'            => $validated['jumlah'],
+        ]);
 
         return redirect('/pengeluaran')->with('success', 'Transaksi pengeluaran berhasil ditambahkan!');
     }
@@ -128,8 +135,7 @@ class PengeluaranController extends Controller
         for ($i = 0; $i < count($request->jenis_pengeluaran); $i++) {
             TransaksiPengeluaran::create([
                 'tanggal'            => $validated['tanggal'],
-                'jenis_pengeluaran'  => $validated['jenis_pengeluaran'][$i],
-                'nama_item'          => $validated['nama_item'][$i],
+                'id_item'          => $validated['nama_item'][$i],
                 'kuantitas'          => $validated['kuantitas'][$i],
                 'harga_per_item'     => $validated['harga_per_item'][$i],
                 'jumlah'             => $validated['jumlah'][$i],
@@ -161,10 +167,19 @@ class PengeluaranController extends Controller
      */
     public function update(Request $request, TransaksiPengeluaran $pengeluaran)
     {
-        $pengeluaran->update($request->all());
+        $validated = $request->validate([
+            'tanggal' => 'required|date',
+            'id_item' => 'required|exists:item_pengeluaran,id',
+            'keterangan' => 'nullable|string',
+            'kuantitas' => 'required|numeric',
+            'harga_per_item' => 'required|numeric',
+            'jumlah' => 'required|numeric',
+        ]);
 
-         return redirect()
-            ->to(url()->previous())
+        $pengeluaran->update($validated);
+
+        return redirect()
+            ->back()
             ->with('success', 'Data pengeluaran berhasil diperbarui!');
     }
 

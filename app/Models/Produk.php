@@ -13,4 +13,11 @@ class Produk extends Model
         'harga_satuan_normal'
     ];
 
+    public function itemPemasukan()
+    {
+        return $this->hasMany(ItemPemasukan::class, 'id_produk', 'id');
+    }
+
 }
+
+

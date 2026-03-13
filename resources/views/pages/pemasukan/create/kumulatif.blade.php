@@ -43,10 +43,9 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-2"><label class="form-label">Pelanggan*</label></div>
+                                <div class="col-3"><label class="form-label">Pelanggan*</label></div>
                                 <div class="col-2"><label class="form-label">Produk*</label></div>
-                                <div class="col-1"><label class="form-label">Kuantitas*</label></div>
-                                <div class="col-2"><label class="form-label">Satuan*</label></div>
+                                <div class="col-2"><label class="form-label">Kuantitas*</label></div>
                                 <div class="col-2"><label class="form-label">Harga Satuan*</label></div>
                                 <div class="col-3"><label class="form-label">Jumlah</label></div>
                             </div>
@@ -57,7 +56,7 @@
 
                                 @foreach ($transaksiOld as $i => $p)
                                     <div class="row mb-1 transaksi-row">
-                                        <div class="col-2">
+                                        <div class="col-3">
                                             <input type="text" name="pelanggan[]"
                                                 class="form-control @error('pelanggan.*') is-invalid @enderror"
                                                 value="{{ old('pelanggan.' . $i) }}" placeholder="Masukkan pelanggan"
@@ -72,24 +71,19 @@
                                                 required>
                                                 <option value="">Pilih Produk</option>
                                                 @foreach ($daftar_produk as $produk)
-                                                    <option value="{{ $produk->nama_produk }}"
+                                                    <option value="{{ $produk->id }}"
                                                         data-harga="{{ $produk->harga_satuan_normal }}"
                                                         data-satuan="{{ $produk->satuan }}"
-                                                        {{ old('produk.' . $i) == $produk->nama_produk ? 'selected' : '' }}>
+                                                        {{ old('produk.' . $i) == $produk->id ? 'selected' : '' }}>
                                                         {{ $produk->nama_produk }} ({{ $produk->satuan }})
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-1">
+                                        <div class="col-2">
                                             <input type="number" step="0.01" name="kuantitas[]"
                                                 class="form-control @error('kuantitas.*') is-invalid @enderror"
                                                 value="{{ old('kuantitas.' . $i) }}" placeholder="Qty" required>
-                                        </div>
-                                        <div class="col-2">
-                                            <input type="text" name="satuan[]"
-                                                class="form-control @error('satuan.*') is-invalid @enderror"
-                                                value="{{ old('satuan.' . $i) }}" placeholder="Masukkan satuan" readonly>
                                         </div>
                                         <div class="col-2">
                                             <input type="text" name="harga_satuan[]"
@@ -169,10 +163,6 @@
                     let selected = e.target.options[e.target.selectedIndex];
 
                     let harga = selected.dataset.harga || 0;
-                    let satuan = selected.dataset.satuan || "";
-
-                    // isi satuan
-                    row.querySelector('input[name="satuan[]"]').value = satuan;
 
                     // isi harga
                     row.querySelector('input[name="harga_satuan[]"]').value = harga ? formatRupiah(harga) :

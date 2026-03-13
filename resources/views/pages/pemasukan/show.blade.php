@@ -57,7 +57,7 @@
                                         Produk
                                     </label>
                                     <input type="text" class="form-control"
-                                        value="{{ $pemasukan->itemPemasukan[0]->produk }}" disabled>
+                                        value="{{ $pemasukan->itemPemasukan[0]->produk->nama_produk }}" disabled>
                                 </div>
                                 <div class="col-2">
                                     <label class="form-label">
@@ -71,7 +71,7 @@
                                         Satuan
                                     </label>
                                     <input type="text" class="form-control"
-                                        value="{{ $pemasukan->itemPemasukan[0]->satuan }}" disabled>
+                                        value="{{ $pemasukan->itemPemasukan[0]->produk->satuan }}" disabled>
                                 </div>
                                 <div class="col-2">
                                     <label class="form-label">
@@ -93,13 +93,13 @@
                             @foreach ($pemasukan->itemPemasukan->skip(1) as $item)
                                 <div class="row">
                                     <div class="col-3">
-                                        <input type="text" class="form-control" value="{{ $item->produk }}" disabled>
+                                        <input type="text" class="form-control" value="{{ $item->produk->nama_produk }}" disabled>
                                     </div>
                                     <div class="col-2">
                                         <input type="number"class="form-control" value="{{ $item->kuantitas }}" disabled>
                                     </div>
                                     <div class="col-2">
-                                        <input type="text" class="form-control" value="{{ $item->satuan }}" disabled>
+                                        <input type="text" class="form-control" value="{{ $item->produk->satuan }}" disabled>
                                     </div>
                                     <div class="col-2">
                                         <input type="text" class="form-control"

@@ -153,10 +153,10 @@
                                                                 class="text-secondary">{{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d M Y') }}</span>
                                                         </td>
                                                         <td>
-                                                            {{ $pengeluaran->jenis_pengeluaran }}
+                                                            {{ $pengeluaran->itemPengeluaran->jenisPengeluaran->nama }}
                                                         </td>
                                                         <td>
-                                                            {{ $pengeluaran->nama_item }}
+                                                            {{ $pengeluaran->itemPengeluaran->nama }}
                                                         </td>
                                                         <td>
                                                             {{ $pengeluaran->keterangan }}
@@ -178,8 +178,8 @@
                                                                     data-bs-toggle="modal" data-bs-target="#modal-edit"
                                                                     data-id="{{ $pengeluaran->id }}"
                                                                     data-tanggal="{{ $pengeluaran->tanggal }}"
-                                                                    data-jenis="{{ $pengeluaran->jenis_pengeluaran }}"
-                                                                    data-nama="{{ $pengeluaran->nama_item }}"
+                                                                    data-jenis="{{ $pengeluaran->itemPengeluaran->jenisPengeluaran->id }}"
+                                                                    data-item="{{ $pengeluaran->itemPengeluaran->id }}"
                                                                     data-ket="{{ $pengeluaran->keterangan }}"
                                                                     data-kuantitas="{{ $pengeluaran->kuantitas }}"
                                                                     data-harga="{{ $pengeluaran->harga_per_item }}">
@@ -275,7 +275,6 @@
                                                                                 <path d="M16 5l3 3" />
                                                                             </svg>
                                                                         </a> --}}
-
                                                                         <a href="#" data-bs-toggle="modal"
                                                                             data-bs-target="#modal-delete-jenis"
                                                                             data-id-jenis="{{ $jenis->id }}"
@@ -423,14 +422,20 @@
 
                             <div class="col-lg-6 mb-3">
                                 <label class="form-label">Jenis Pengeluaran*</label>
-                                <input type="text" class="form-control" name="jenis_pengeluaran"
-                                    id="edit_jenis_pengeluaran" required>
+                                <select class="form-select" name="jenis_pengeluaran" id="edit_jenis_pengeluaran"
+                                    required>
+                                    <option value="">Pilih Jenis Pengeluaran</option>
+                                    @foreach ($daftar_jenis_pengeluaran as $jenis)
+                                        <option value="{{ $jenis->id }}">{{ $jenis->nama }}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="col-lg-6 mb-3">
                                 <label class="form-label">Nama Item*</label>
-                                <input type="text" class="form-control" name="nama_item" id="edit_nama_item"
-                                    required>
+                                <select class="form-select" name="id_item" id="edit_nama_item" required>
+                                    <option value="">Pilih Nama Item</option>
+                                </select>
                             </div>
 
                             <div class="col-lg-6 mb-3">
@@ -581,6 +586,42 @@
         });
     </script>
     <script>
+        const dataJenis = @json($daftar_jenis_pengeluaran);
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const jenisSelect = document.getElementById("edit_jenis_pengeluaran");
+            const itemSelect = document.getElementById("edit_nama_item");
+
+            jenisSelect.addEventListener("change", function() {
+
+                let selectedJenis = this.value;
+
+                itemSelect.innerHTML = '<option value="">Pilih Nama Item</option>';
+
+                if (!selectedJenis) return;
+
+                let jenis = dataJenis.find(j => j.id == selectedJenis);
+
+                if (jenis && jenis.item_pengeluaran) {
+
+                    jenis.item_pengeluaran.forEach(item => {
+
+                        let option = document.createElement("option");
+                        option.value = item.id;
+                        option.textContent = item.nama;
+
+                        itemSelect.appendChild(option);
+
+                    });
+
+                }
+
+            });
+
+        });
+    </script>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
             const editModal = document.getElementById('modal-edit');
 
@@ -593,14 +634,16 @@
             }
 
             editModal.addEventListener('show.bs.modal', function(event) {
+
                 let button = event.relatedTarget;
                 let id = button.getAttribute('data-id');
+
+                let jenis = button.getAttribute('data-jenis');
+                let item = button.getAttribute('data-item');
 
                 document.getElementById('editForm').action = "/pengeluaran/" + id;
 
                 document.getElementById('edit_tanggal').value = button.getAttribute('data-tanggal');
-                document.getElementById('edit_jenis_pengeluaran').value = button.getAttribute('data-jenis');
-                document.getElementById('edit_nama_item').value = button.getAttribute('data-nama');
                 document.getElementById('edit_keterangan').value = button.getAttribute('data-ket');
                 document.getElementById('edit_kuantitas').value = button.getAttribute('data-kuantitas');
 
@@ -609,8 +652,21 @@
                 document.getElementById('edit_harga_per_item').value = harga;
                 document.getElementById('edit_harga_per_item_display').value = formatRupiah(harga);
 
+                // SET JENIS
+                let jenisSelect = document.getElementById('edit_jenis_pengeluaran');
+                jenisSelect.value = jenis;
+
+                // TRIGGER CHANGE AGAR ITEM TERISI
+                jenisSelect.dispatchEvent(new Event('change'));
+
+                // SET ITEM SETELAH OPTION TERISI
+                setTimeout(() => {
+                    document.getElementById('edit_nama_item').value = item;
+                }, 100);
+
                 calculateEditJumlah();
             });
+
 
             function calculateEditJumlah() {
                 let q = parseFloat(document.getElementById('edit_kuantitas').value) || 0;

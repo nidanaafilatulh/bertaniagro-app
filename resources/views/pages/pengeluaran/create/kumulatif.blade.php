@@ -53,28 +53,47 @@
                                 @foreach ($pengeluaranOld as $i => $p)
                                     <div class="row mt-1 pengeluaran-row">
                                         <div class="col-3">
-                                            <input type="text" placeholder="Masukkan jenis pengeluaran"
-                                                class="form-control @error('jenis_pengeluaran.*') is-invalid @enderror"
-                                                id="jenis_pengeluaran" name="jenis_pengeluaran[]"
-                                                value="{{ old('jenis_pengeluaran.' . $i) }}" required>
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" placeholder="Masukkan nama item"
-                                                class="form-control @error('nama_item.*') is-invalid @enderror"
-                                                id="nama_item" name="nama_item[]" value="{{ old('nama_item.' . $i) }}"
+                                            <select name="jenis_pengeluaran[]"
+                                                class="form-select jenis-pengeluaran @error('jenis_pengeluaran.*') is-invalid @enderror"
                                                 required>
+                                                <option value="">Pilih Jenis Pengeluaran</option>
+                                                @foreach ($daftar_jenis_pengeluaran as $jenis)
+                                                    <option value="{{ $jenis->nama }}">
+                                                        {{ $jenis->nama }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
+
+                                        <div class="col-3">
+                                            <select name="nama_item[]"
+                                                class="form-select nama-item @error('nama_item.*') is-invalid @enderror"
+                                                required>
+                                                <option value="">Pilih Nama Item</option>
+                                            </select>
+                                        </div>
+
                                         <div class="col-1">
                                             <input type="number" step="0.01"
                                                 class="form-control qty @error('kuantitas.*') is-invalid @enderror"
                                                 id="kuantitas" name="kuantitas[]" value="{{ old('kuantitas.' . $i) }}"
                                                 required>
+                                            @error('kuantitas.*')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                         <div class="col-2">
                                             <input type="text" placeholder="Masukkan harga"
                                                 class="form-control harga @error('harga_per_item.*') is-invalid @enderror"
                                                 name="harga_per_item[]" oninput="formatRupiah(this)"
                                                 value="{{ old('harga_per_item.' . $i) }}" required>
+                                            @error('harga_per_item.*')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                         <div class="col-2">
                                             <input type="text" class="form-control jumlah" name="jumlah[]" id="jumlah"
@@ -171,6 +190,10 @@
                 input.value = "";
             });
 
+            clone.querySelectorAll("select").forEach(select => {
+                select.selectedIndex = 0;
+            });
+
             container.appendChild(clone);
         });
 
@@ -182,6 +205,42 @@
                     updateTotal();
                 }
             }
+        });
+    </script>
+    <script>
+        const dataJenis = @json($daftar_jenis_pengeluaran);
+
+        document.addEventListener("change", function(e) {
+
+            if (e.target.classList.contains("jenis-pengeluaran")) {
+
+                let row = e.target.closest(".pengeluaran-row");
+                let itemSelect = row.querySelector(".nama-item");
+
+                let selectedJenis = e.target.value;
+
+                // reset item
+                itemSelect.innerHTML = '<option value="">Pilih Nama Item</option>';
+
+                if (!selectedJenis) return;
+
+                let jenis = dataJenis.find(j => j.nama === selectedJenis);
+
+                if (jenis && jenis.item_pengeluaran) {
+
+                    jenis.item_pengeluaran.forEach(item => {
+
+                        let option = document.createElement("option");
+                        option.value = item.id;
+                        option.textContent = item.nama;
+
+                        itemSelect.appendChild(option);
+
+                    });
+
+                }
+            }
+
         });
     </script>
 @endsection
