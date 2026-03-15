@@ -258,22 +258,28 @@
                                                         </td>
                                                         <td class="text-end">
                                                             <div class="btn-list flex-nowrap justify-content-end">
-                                                                <a href="#" data-bs-toggle="modal"
-                                                                    data-bs-target="#modal-edit"
-                                                                    data-id-produk="{{ $produk->id }}"
-                                                                    data-nama="{{ $produk->nama_produk }}"
-                                                                    data-satuan="{{ $produk->satuan }}"
-                                                                    data-harga="{{ $produk->harga_satuan_normal }}"
-                                                                    class="btn btn-outline-warning">
-                                                                    Edit
-                                                                </a>
+                                                                @if($produk->total_transaksi > 0)
+                                                                    <a href="#" class="btn btn-outline-warning disabled">
+                                                                        Tidak Bisa Edit/Hapus
+                                                                    </a>
+                                                                @else
+                                                                    <a href="#" data-bs-toggle="modal"
+                                                                        data-bs-target="#modal-edit"
+                                                                        data-id-produk="{{ $produk->id }}"
+                                                                        data-nama="{{ $produk->nama_produk }}"
+                                                                        data-satuan="{{ $produk->satuan }}"
+                                                                        data-harga="{{ $produk->harga_satuan_normal }}"
+                                                                        class="btn btn-outline-warning">
+                                                                        Edit
+                                                                    </a>
 
-                                                                <a href="#" class="btn btn-outline-danger"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#modal-delete-produk"
-                                                                    data-id-produk="{{ $produk->id }}">
-                                                                    Hapus
-                                                                </a>
+                                                                    <a href="#" class="btn btn-outline-danger"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#modal-delete-produk"
+                                                                        data-id-produk="{{ $produk->id }}">
+                                                                        Hapus
+                                                                    </a>
+                                                                @endif
                                                             </div>
                                                         </td>
                                                     </tr>

@@ -66,7 +66,7 @@
                 @foreach ($pengeluaran as $item)
                     <tr>
                         <td>{{ $item->jenis_pengeluaran }}</td>
-                        <td>{{ number_format($item->total_pengeluaran, 2, ',', '.') }}</td>
+                        <td>Rp {{ number_format($item->total_pengeluaran, 2, ',', '.') }}</td>
                     </tr>
                 @endforeach
             </tbody>

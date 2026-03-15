@@ -19,16 +19,17 @@ class RekapPemasukanController extends Controller
         $tanggal = now()->toDateString();
 
         $query = DB::table('item_pemasukan as i')
+            ->join('produk as p', 'i.id_produk', '=', 'p.id')
             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
             ->select(
                 't.tanggal_transaksi',
-                'i.produk',
-                'i.satuan',
+                'p.nama_produk as produk',
+                'p.satuan',
                 DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                 DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
             )
             ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+            ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
             ->orderBy('t.tanggal_transaksi', 'asc');
 
         $data = $query->get();
@@ -43,11 +44,12 @@ class RekapPemasukanController extends Controller
 
         // Selada
         $querySelada = DB::table('item_pemasukan as i')
+                        ->join('produk as p', 'i.id_produk', '=', 'p.id')
                         ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
                         ->select(
                             't.tanggal_transaksi',
-                            'i.produk',
-                            'i.satuan',
+                            'p.nama_produk as produk',
+                            'p.satuan',
                             DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                             DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
                         )
@@ -55,18 +57,18 @@ class RekapPemasukanController extends Controller
                             // Rule 1: pelanggan AEON / IB → satuan != pack + produk selada
                             $q->where(function ($sub) {
                                 $sub->whereIn('t.pelanggan', ['Aeon Mall', 'Istana Buah'])
-                                    ->whereRaw('LOWER(i.satuan) != "pack"')
-                                    ->whereRaw('LOWER(i.produk) = "selada"');
+                                    ->whereRaw('LOWER(p.satuan) != "pack"')
+                                    ->whereRaw('LOWER(p.nama_produk) = "selada"');
                             })
 
                             // Rule 2: pelanggan lain → ambil semua satuan (tetap produk selada)
                             ->orWhere(function ($sub) {
                                 $sub->whereNotIn('t.pelanggan', ['Aeon Mall', 'Istana Buah'])
-                                    ->whereRaw('LOWER(i.produk) = "selada"');
+                                    ->whereRaw('LOWER(p.nama_produk) = "selada"');
                             });
                         })
                         ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-                        ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+                        ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
                         ->orderBy('t.tanggal_transaksi', 'asc');
 
         // Rekap Penjualan Selada Kg-an
@@ -85,18 +87,19 @@ class RekapPemasukanController extends Controller
 
         // Rekap Aeon Mall (Pack)
         $queryAeonPack = DB::table('item_pemasukan as i')
+            ->join('produk as p', 'i.id_produk', '=', 'p.id')
             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
             ->select(
                 't.tanggal_transaksi',
-                'i.produk',
-                'i.satuan',
+                'p.nama_produk as produk',
+                'p.satuan',
                 DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                 DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
             )
             ->where('pelanggan', 'Aeon Mall')
-            ->where('i.satuan', 'Pack')
+            ->where('p.satuan', 'Pack')
             ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+            ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
             ->orderBy('t.tanggal_transaksi', 'asc');
         
         $dataAeon = $queryAeonPack->get();
@@ -114,18 +117,19 @@ class RekapPemasukanController extends Controller
 
         // Rekap Istana Buah (Pack)
         $queryIstanaPack = DB::table('item_pemasukan as i')
+            ->join('produk as p', 'i.id_produk', '=', 'p.id')
             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
             ->select(
                 't.tanggal_transaksi',
-                'i.produk',
-                'i.satuan',
+                'p.nama_produk as produk',
+                'p.satuan',
                 DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                 DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
             )
             ->where('pelanggan', 'Istana Buah')
-            ->where('i.satuan', 'Pack')
+            ->where('p.satuan', 'Pack')
             ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+            ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
             ->orderBy('t.tanggal_transaksi', 'asc');
         
         $dataIstana = $queryIstanaPack->get();
@@ -142,11 +146,12 @@ class RekapPemasukanController extends Controller
         });
         // Query untuk Rekap Lainnya
         $queryLainnya = DB::table('item_pemasukan as i')
+                    ->join('produk as p', 'i.id_produk', '=', 'p.id')
                     ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
                     ->select(
                         't.tanggal_transaksi',
-                        'i.produk',
-                        'i.satuan',
+                        'p.nama_produk as produk',
+                        'p.satuan',
                         DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                         DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
                     )
@@ -156,7 +161,7 @@ class RekapPemasukanController extends Controller
                         // Rule 1: pelanggan AEON / IB → satuan != pack
                         $q->where(function ($sub) {
                             $sub->whereIn('pelanggan', ['Aeon Mall', 'Istana Buah'])
-                                ->whereRaw('LOWER(i.satuan) != "pack"');
+                                ->whereRaw('LOWER(p.satuan) != "pack"');
                         })
                         // Rule 2: pelanggan lain → ambil semua satuan
                         ->orWhere(function ($sub) {
@@ -165,9 +170,9 @@ class RekapPemasukanController extends Controller
                     })
 
                     // Rule 3: pengecualian selada satuan kg
-                    ->whereRaw('NOT(LOWER(i.produk) = "selada")')
+                    ->whereRaw('NOT(LOWER(p.nama_produk) = "selada")')
 
-                    ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+                    ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
                     ->orderBy('t.tanggal_transaksi', 'asc');
 
 
@@ -254,16 +259,17 @@ class RekapPemasukanController extends Controller
         $tanggal_akhir = $request->tanggal_akhir;
 
         $query = DB::table('item_pemasukan as i')
+            ->join('produk as p', 'i.id_produk', '=', 'p.id')
             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
             ->select(
                 't.tanggal_transaksi',
-                'i.produk',
-                'i.satuan',
+                'p.nama_produk as produk',
+                'p.satuan as satuan',
                 DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                 DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
             )
             ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+            ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
             ->orderBy('t.tanggal_transaksi', 'asc');
         $data = $query->get();
         // ⭐ Group by date for rowspan
@@ -276,11 +282,12 @@ class RekapPemasukanController extends Controller
 
         // Selada
         $querySelada = DB::table('item_pemasukan as i')
+                        ->join('produk as p', 'i.id_produk', '=', 'p.id')
                         ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
                         ->select(
                             't.tanggal_transaksi',
-                            'i.produk',
-                            'i.satuan',
+                            'p.nama_produk as produk',
+                            'p.satuan as satuan',
                             DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                             DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
                         )
@@ -288,18 +295,18 @@ class RekapPemasukanController extends Controller
                             // Rule 1: pelanggan AEON / IB → satuan != pack + produk selada
                             $q->where(function ($sub) {
                                 $sub->whereIn('t.pelanggan', ['Aeon Mall', 'Istana Buah'])
-                                    ->whereRaw('LOWER(i.satuan) != "pack"')
-                                    ->whereRaw('LOWER(i.produk) = "selada"');
+                                    ->whereRaw('LOWER(p.satuan) != "pack"')
+                                    ->whereRaw('LOWER(p.nama_produk) = "selada"');
                             })
 
                             // Rule 2: pelanggan lain → ambil semua satuan (tetap produk selada)
                             ->orWhere(function ($sub) {
                                 $sub->whereNotIn('t.pelanggan', ['Aeon Mall', 'Istana Buah'])
-                                    ->whereRaw('LOWER(i.produk) = "selada"');
+                                    ->whereRaw('LOWER(p.nama_produk) = "selada"');
                             });
                         })
                         ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-                        ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+                        ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
                         ->orderBy('t.tanggal_transaksi', 'asc');
 
         // Rekap Penjualan Selada Kg-an
@@ -318,18 +325,19 @@ class RekapPemasukanController extends Controller
 
         // Rekap Aeon Mall (Pack)
         $queryAeonPack = DB::table('item_pemasukan as i')
+            ->join('produk as p', 'i.id_produk', '=', 'p.id')
             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
             ->select(
                 't.tanggal_transaksi',
-                'i.produk',
-                'i.satuan',
+                'p.nama_produk as produk',
+                'p.satuan as satuan',
                 DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                 DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
             )
             ->where('pelanggan', 'Aeon Mall')
-            ->where('i.satuan', 'Pack')
+            ->where('p.satuan', 'Pack')
             ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+            ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
             ->orderBy('t.tanggal_transaksi', 'asc');
         
         $dataAeon = $queryAeonPack->get();
@@ -347,18 +355,19 @@ class RekapPemasukanController extends Controller
 
         // Rekap Istana Buah (Pack)
         $queryIstanaPack = DB::table('item_pemasukan as i')
+            ->join('produk as p', 'i.id_produk', '=', 'p.id')
             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
             ->select(
                 't.tanggal_transaksi',
-                'i.produk',
-                'i.satuan',
+                'p.nama_produk as produk',
+                'p.satuan as satuan',
                 DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                 DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
             )
             ->where('pelanggan', 'Istana Buah')
-            ->where('i.satuan', 'Pack')
+            ->where('p.satuan', 'Pack')
             ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+            ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
             ->orderBy('t.tanggal_transaksi', 'asc');
         
         $dataIstana = $queryIstanaPack->get();
@@ -375,11 +384,12 @@ class RekapPemasukanController extends Controller
         });
         // Query untuk Rekap Lainnya
         $queryLainnya = DB::table('item_pemasukan as i')
+                    ->join('produk as p', 'i.id_produk', '=', 'p.id')
                     ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
                     ->select(
                         't.tanggal_transaksi',
-                        'i.produk',
-                        'i.satuan',
+                        'p.nama_produk as produk',
+                        'p.satuan as satuan',
                         DB::raw('SUM(i.kuantitas) as total_kuantitas'),
                         DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
                     )
@@ -389,7 +399,7 @@ class RekapPemasukanController extends Controller
                         // Rule 1: pelanggan AEON / IB → satuan != pack
                         $q->where(function ($sub) {
                             $sub->whereIn('pelanggan', ['Aeon Mall', 'Istana Buah'])
-                                ->whereRaw('LOWER(i.satuan) != "pack"');
+                                ->whereRaw('LOWER(p.satuan) != "pack"');
                         })
                         // Rule 2: pelanggan lain → ambil semua satuan
                         ->orWhere(function ($sub) {
@@ -398,9 +408,9 @@ class RekapPemasukanController extends Controller
                     })
 
                     // Rule 3: pengecualian selada satuan kg
-                    ->whereRaw('NOT (LOWER(i.produk) = "selada")')
+                    ->whereRaw('NOT (LOWER(p.nama_produk) = "selada")')
 
-                    ->groupBy('t.tanggal_transaksi', 'i.produk', 'i.satuan')
+                    ->groupBy('t.tanggal_transaksi', 'produk', 'p.satuan')
                     ->orderBy('t.tanggal_transaksi', 'asc');
 
 

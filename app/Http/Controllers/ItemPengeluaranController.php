@@ -79,6 +79,10 @@ class ItemPengeluaranController extends Controller
      */
     public function destroy(ItemPengeluaran $itemPengeluaran)
     {
+        if ($itemPengeluaran->transaksiPengeluaran()->exists()) {
+            return back()->with('error', 'Item sudah digunakan dalam transaksi.');
+        }    
+        
         ItemPengeluaran::destroy($itemPengeluaran->id);
         return redirect()
             ->to(url()->previous())

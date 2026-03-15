@@ -19,53 +19,61 @@ class RekapPengeluaranController extends Controller
 
         // Group total per jenis pengeluaran
         $dataJenisPengeluaran = DB::table('transaksi_pengeluaran as t')
+            ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+            ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
             ->select(
-                't.jenis_pengeluaran',
+                'j.nama as jenis_pengeluaran',
                 DB::raw('SUM(t.jumlah) as total_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->whereIn('t.jenis_pengeluaran', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
-            ->groupBy('t.jenis_pengeluaran')
-            ->orderBy('t.jenis_pengeluaran', 'asc')
+            ->whereIn('j.nama', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
+            ->groupBy('j.nama')
+            ->orderBy('j.nama', 'asc')
             ->get();
 
         // Group item per jenis_pengeluaran
         $dataItem = DB::table('transaksi_pengeluaran as t')
+            ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+            ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
             ->select(
-                't.jenis_pengeluaran',
-                't.nama_item',
+                'j.nama as jenis_pengeluaran',
+                'i.nama as nama_item',
                 DB::raw('SUM(t.kuantitas) as total_kuantitas'),
                 't.harga_per_item',
                 DB::raw('SUM(t.jumlah) as item_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->whereIn('t.jenis_pengeluaran', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
-            ->groupBy('t.jenis_pengeluaran', 't.nama_item', 't.harga_per_item')
-            ->orderBy('t.nama_item', 'asc')
+            ->whereIn('j.nama', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
+            ->groupBy('j.nama', 'i.nama', 't.harga_per_item')
+            ->orderBy('i.nama', 'asc')
             ->get()
             ->groupBy('jenis_pengeluaran');
         
         $dataJenisPengeluaranLain = DB::table('transaksi_pengeluaran as t')
+            ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+            ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
             ->select(
-                't.jenis_pengeluaran',
+                'j.nama as jenis_pengeluaran',
                 DB::raw('SUM(t.jumlah) as total_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->whereNotIn('t.jenis_pengeluaran', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
-            ->groupBy('t.jenis_pengeluaran')
-            ->orderBy('t.jenis_pengeluaran', 'asc')
+            ->whereNotIn('j.nama', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
+            ->groupBy('j.nama')
+            ->orderBy('j.nama', 'asc')
             ->get();
         
         $dataItemLain = DB::table('transaksi_pengeluaran as t')
+            ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+            ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
             ->select(
-                't.jenis_pengeluaran',
-                't.nama_item',
+                'j.nama as jenis_pengeluaran',
+                'i.nama as nama_item',
                 DB::raw('SUM(t.jumlah) as item_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->whereNotIn('t.jenis_pengeluaran', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
-            ->groupBy('t.jenis_pengeluaran', 't.nama_item')
-            ->orderBy('t.nama_item', 'asc')
+            ->whereNotIn('j.nama', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
+            ->groupBy('j.nama', 'i.nama')
+            ->orderBy('i.nama', 'asc')
             ->get()
             ->groupBy('jenis_pengeluaran');
 
@@ -93,53 +101,61 @@ class RekapPengeluaranController extends Controller
 
         // Group total per jenis pengeluaran
         $dataJenisPengeluaran = DB::table('transaksi_pengeluaran as t')
+            ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+            ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
             ->select(
-                't.jenis_pengeluaran',
+                'j.nama as jenis_pengeluaran',
                 DB::raw('SUM(t.jumlah) as total_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->whereIn('t.jenis_pengeluaran', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
-            ->groupBy('t.jenis_pengeluaran')
-            ->orderBy('t.jenis_pengeluaran', 'asc')
+            ->whereIn('j.nama', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
+            ->groupBy('j.nama')
+            ->orderBy('j.nama', 'asc')
             ->get();
 
         // Group item per jenis_pengeluaran
         $dataItem = DB::table('transaksi_pengeluaran as t')
+            ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+            ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
             ->select(
-                't.jenis_pengeluaran',
-                't.nama_item',
+                'j.nama as jenis_pengeluaran',
+                'i.nama as nama_item',
                 DB::raw('SUM(t.kuantitas) as total_kuantitas'),
                 't.harga_per_item',
                 DB::raw('SUM(t.jumlah) as item_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->whereIn('t.jenis_pengeluaran', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
-            ->groupBy('t.jenis_pengeluaran', 't.nama_item', 't.harga_per_item')
-            ->orderBy('t.nama_item', 'asc')
+            ->whereIn('j.nama', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
+            ->groupBy('j.nama', 'i.nama', 't.harga_per_item')
+            ->orderBy('i.nama', 'asc')
             ->get()
             ->groupBy('jenis_pengeluaran');
         
         $dataJenisPengeluaranLain = DB::table('transaksi_pengeluaran as t')
+            ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+            ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
             ->select(
-                't.jenis_pengeluaran',
+                'j.nama as jenis_pengeluaran',
                 DB::raw('SUM(t.jumlah) as total_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->whereNotIn('t.jenis_pengeluaran', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
-            ->groupBy('t.jenis_pengeluaran')
-            ->orderBy('t.jenis_pengeluaran', 'asc')
+            ->whereNotIn('j.nama', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
+            ->groupBy('j.nama')
+            ->orderBy('j.nama', 'asc')
             ->get();
         
         $dataItemLain = DB::table('transaksi_pengeluaran as t')
+            ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+            ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
             ->select(
-                't.jenis_pengeluaran',
-                't.nama_item',
+                'j.nama as jenis_pengeluaran',
+                'i.nama as nama_item',
                 DB::raw('SUM(t.jumlah) as item_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->whereNotIn('t.jenis_pengeluaran', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
-            ->groupBy('t.jenis_pengeluaran', 't.nama_item')
-            ->orderBy('t.nama_item', 'asc')
+            ->whereNotIn('j.nama', ['Gaji Karyawan', 'Nutrisi', 'Rockwool', 'Kulakan', 'Listrik', 'Benih'])
+            ->groupBy('j.nama', 'i.nama')
+            ->orderBy('i.nama', 'asc')
             ->get()
             ->groupBy('jenis_pengeluaran');
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
@@ -16,12 +16,13 @@ class AdminDashboardController extends Controller
         $show = request('show', 10);
 
         $query = DB::table('item_pemasukan as i')
+            ->join('produk as p', 'i.id_produk', '=', 'p.id')
             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
             ->select(
                 't.pelanggan',
-                'i.produk',
+                'p.nama_produk as produk',
                 'i.kuantitas',
-                'i.satuan',
+                'p.satuan',
                 'i.harga_satuan',
                 't.bukti_bayar',
                 DB::raw('(i.kuantitas * i.harga_satuan) as jumlah')

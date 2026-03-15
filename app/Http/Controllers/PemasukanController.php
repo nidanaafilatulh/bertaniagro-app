@@ -7,6 +7,7 @@ use App\Models\Produk;
 use App\Models\TransaksiPemasukan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PemasukanController extends Controller
@@ -32,10 +33,23 @@ class PemasukanController extends Controller
         'search' => request('search'),
     ];
 
+    // Bisa di perbaiki lagi dengan relasi Eloquent, tapi untuk sementara pakai query builder dulu
+    $daftar_produk = DB::table('produk as p')
+                        ->select(
+                            'p.id',
+                            'p.nama_produk', 
+                            'p.satuan',
+                            'p.harga_satuan_normal',
+                            DB::raw('COUNT(i.id) as total_transaksi')
+                        )
+                        ->leftJoin('item_pemasukan as i', 'i.id_produk', '=', 'p.id')
+                        ->groupBy('p.id')
+                        ->get();
+
     return view('pages.pemasukan.index', [
         'title' => 'Pemasukan',
         'tanggal_hari_ini' => $today,
-        'daftar_produk' => Produk::all(),
+        'daftar_produk' => $daftar_produk,
         'daftar_pemasukan' => TransaksiPemasukan::latest()
             ->filter($filters)
             ->paginate($show)

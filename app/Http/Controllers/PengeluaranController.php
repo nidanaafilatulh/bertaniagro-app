@@ -31,16 +31,20 @@ class PengeluaranController extends Controller
             'search' => request('search'),
         ];
 
-        $daftar_jenis_pengeluaran = JenisPengeluaran::with('itemPengeluaran')->get();
-        
+        $daftar_jenis_pengeluaran = JenisPengeluaran::with([
+            'itemPengeluaran' => function ($query) {
+                $query->withCount('transaksiPengeluaran');
+            }
+        ])->get();
+
         return view('pages.pengeluaran.index', [
             'title' => 'Daftar Pengeluaran',
             'tanggal_hari_ini' => $today,
             'daftar_jenis_pengeluaran' => $daftar_jenis_pengeluaran,
             'daftar_pengeluaran' => TransaksiPengeluaran::latest()
-                                                        ->filter($filters)
-                                                        ->paginate($show)
-                                                        ->withQueryString(),
+                ->filter($filters)
+                ->paginate($show)
+                ->withQueryString(),
         ]);
     }
 
@@ -52,7 +56,7 @@ class PengeluaranController extends Controller
         $tanggal = now()->toDateString();
 
         return view('pages.pengeluaran.create', [
-            'title' => 'Tambah Data Transaksi Pengeluaran', 
+            'title' => 'Tambah Data Transaksi Pengeluaran',
             'daftar_jenis_pengeluaran' => JenisPengeluaran::with('itemPengeluaran')->get(),
             'tanggal' => $tanggal
         ]);
@@ -190,7 +194,7 @@ class PengeluaranController extends Controller
     {
         $pengeluaran::destroy($pengeluaran->id);
         return redirect()
-        ->to(url()->previous())
-        ->with('success', 'Transaksi pengeluaran berhasil dihapus!');
+            ->to(url()->previous())
+            ->with('success', 'Transaksi pengeluaran berhasil dihapus!');
     }
 }
