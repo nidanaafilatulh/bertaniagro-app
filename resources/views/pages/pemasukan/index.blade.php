@@ -162,11 +162,19 @@
                                                         <td>
                                                             @if ($pemasukan->itemPemasukan->count() == 1)
                                                                 {{ $pemasukan->itemPemasukan[0]->produk->nama_produk }}
-                                                                ({{ $pemasukan->itemPemasukan[0]->produk->satuan }})
+                                                                (@if ($pemasukan->itemPemasukan[0]->kuantitas % 1 == 0)
+                                                                    {{ number_format($pemasukan->itemPemasukan[0]->kuantitas, 0, ',', '.') }} {{ $pemasukan->itemPemasukan[0]->produk->satuan }}
+                                                                @else
+                                                                    {{ number_format($pemasukan->itemPemasukan[0]->kuantitas, 2, ',', '.') }} {{ $pemasukan->itemPemasukan[0]->produk->satuan }}
+                                                                @endif)
                                                                 <br>
                                                             @elseif ($pemasukan->itemPemasukan->count() > 1)
                                                                 @foreach ($pemasukan->itemPemasukan as $item)
-                                                                    - {{ $item->produk->nama_produk }} ({{ $item->produk->satuan }})<br>
+                                                                    - {{ $item->produk->nama_produk }} (@if($item->kuantitas % 1 == 0)
+                                                                        {{ number_format($item->kuantitas, 0, ',', '.') }} {{ $item->produk->satuan }}
+                                                                    @else
+                                                                        {{ number_format($item->kuantitas, 2, ',', '.') }} {{ $item->produk->satuan }}
+                                                                    @endif)<br>
                                                                 @endforeach
                                                             @endif
                                                         </td>
@@ -258,7 +266,7 @@
                                                         </td>
                                                         <td class="text-end">
                                                             <div class="btn-list flex-nowrap justify-content-end">
-                                                                @if($produk->total_transaksi > 0)
+                                                                @if($produk->itemPemasukan->count() > 0)
                                                                     <a href="#" class="btn btn-outline-warning disabled">
                                                                         Tidak Bisa Edit/Hapus
                                                                     </a>
