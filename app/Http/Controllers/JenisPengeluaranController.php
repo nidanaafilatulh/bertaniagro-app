@@ -66,7 +66,18 @@ class JenisPengeluaranController extends Controller
      */
     public function update(Request $request, JenisPengeluaran $jenisPengeluaran)
     {
-        //
+        $request->validate([
+            'nama_jenis_pengeluaran' => 'required|string|max:255',
+        ]);
+
+        $jenisPengeluaran->update([
+            'nama' => $request->nama_jenis_pengeluaran,
+        ]);
+
+        return redirect()
+            ->to(url()->previous())
+            ->with('success', 'Data jenis pengeluaran berhasil diperbarui!')
+            ->withFragment('tabs-items');
     }
 
     /**

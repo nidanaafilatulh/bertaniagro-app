@@ -71,7 +71,20 @@ class ItemPengeluaranController extends Controller
      */
     public function update(Request $request, ItemPengeluaran $itemPengeluaran)
     {
-        //
+        $request->validate([
+            'jenis_pengeluaran' => 'required|exists:jenis_pengeluaran,id',
+            'nama_item_pengeluaran' => 'required|string|max:255',
+        ]);
+
+        $itemPengeluaran->update([
+            'jenis_pengeluaran_id' => $request->jenis_pengeluaran,
+            'nama' => $request->nama_item_pengeluaran,
+        ]);
+
+        return redirect()
+            ->to(url()->previous())
+            ->with('success', 'Data item pengeluaran berhasil diperbarui!')
+            ->withFragment('tabs-items');
     }
 
     /**
