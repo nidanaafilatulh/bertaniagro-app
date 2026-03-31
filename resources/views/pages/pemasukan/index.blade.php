@@ -476,7 +476,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">Harga Satuan Normal*</label>
-                            <input type="text" name="harga_satuan_normal" id="edit_harga_satuan_normal"
+                            <input type="number" name="harga_satuan_normal" id="edit_harga_satuan_normal"
                                 class="form-control harga-format" placeholder="Masukkan harga satuan normal" required>
                         </div>
 

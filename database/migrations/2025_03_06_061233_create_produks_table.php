@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_produk');
             $table->string('satuan');
-            $table->integer('harga_satuan_normal');
+            $table->unsignedBigInteger('harga_satuan_normal');
             $table->timestamps();
         });
     }
