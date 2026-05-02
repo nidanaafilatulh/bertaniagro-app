@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemPengeluaran;
+use App\Models\JenisBeban;
 use App\Models\JenisPengeluaran;
 use App\Models\TransaksiPengeluaran;
 use Carbon\Carbon;
@@ -37,10 +39,20 @@ class PengeluaranController extends Controller
             }
         ])->get();
 
+        $daftar_jenis_beban = JenisBeban::with([
+            'jenisPengeluaran' => function ($query) {
+                $query->withCount('itemPengeluaran');
+            }
+        ])->get();
+        
+        $daftarItemPengeluaran = ItemPengeluaran::select('id', 'nama', 'jenis_pengeluaran_id')->get();
+
         return view('pages.pengeluaran.index', [
             'title' => 'Daftar Pengeluaran',
             'tanggal_hari_ini' => $today,
+            'daftar_jenis_beban' => $daftar_jenis_beban,
             'daftar_jenis_pengeluaran' => $daftar_jenis_pengeluaran,
+            'daftar_item_pengeluaran' => $daftarItemPengeluaran,
             'daftar_pengeluaran' => TransaksiPengeluaran::latest()
                 ->filter($filters)
                 ->paginate($show)

@@ -19,10 +19,10 @@ return new class extends Migration
                 ->references('id')
                 ->on('item_pengeluaran')
                 ->onDelete('cascade');
-            $table->string('keterangan')->nullable();    // Keterangan
+            $table->string('keterangan', 150)->nullable();    // Keterangan
             $table->decimal('kuantitas', 10, 2);                // Kuantitas
-            $table->integer('harga_per_item');           // Harga per-Item
-            $table->integer('jumlah'); 
+            $table->unsignedBigInteger('harga_per_item');           // Harga per-Item
+            $table->unsignedBigInteger('jumlah'); 
             $table->timestamps();
         });
     }

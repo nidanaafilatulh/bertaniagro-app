@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('transaksi_pemasukan', function (Blueprint $table) {
             $table->unsignedBigInteger('no_transaksi')->primary()->autoIncrement();
             $table->date('tanggal_transaksi');
-            $table->string('pelanggan');
-            $table->string('bukti_bayar')->nullable();
+            $table->string('pelanggan', 50);
+            $table->string('bukti_bayar', 150)->nullable();
             $table->unsignedBigInteger('jumlah');
             $table->timestamps();
         });

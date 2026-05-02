@@ -8,7 +8,7 @@
                 <div class="col">
                     <!-- Page pre-title -->
                     <div class="page-pretitle">
-                        <a href="{{ url()->previous() }}#tabs-items">Kembali</a>
+                        <a href="/pengeluaran#tabs-items">Kembali</a>
                     </div>
                     <h2 class="page-title">
                         Tambah Data Item Pengeluaran

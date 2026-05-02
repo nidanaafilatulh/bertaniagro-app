@@ -68,6 +68,7 @@
                         Request::is('rekap/*') ||
                         Request::is('keuangan/*') ||
                         Request::is('produk*') ||
+                        Request::is('jenis-beban*')||
                         Request::is('jenis-pengeluaran*')||
                         Request::is('item-pengeluaran*');
                 @endphp
@@ -135,6 +136,7 @@
                                 Request::is('pengeluaran*') ||
                                 Request::is('rekap/pengeluaran*') ||
                                 Request::is('create/kumulatif/pengeluaran*') ||
+                                Request::is('jenis-beban*') ||
                                 Request::is('jenis-pengeluaran*')||
                                 Request::is('item-pengeluaran*');
                         @endphp

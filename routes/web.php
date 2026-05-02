@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\ItemPengeluaranController;
+use App\Http\Controllers\JenisBebanController;
 use App\Http\Controllers\JenisPengeluaranController;
 use App\Http\Controllers\LaporanKeuanganController;
 use App\Http\Controllers\OwnerDashboardController;
@@ -48,6 +49,7 @@ Route::middleware(['auth', 'role:admin,owner'])->group(function () {
     Route::resource('/produk', ProdukController::class);
     Route::resource('/item-pengeluaran', ItemPengeluaranController::class);
     Route::resource('/jenis-pengeluaran', JenisPengeluaranController::class);
+    Route::resource('/jenis-beban', JenisBebanController::class);
 });
 
 // 'title' => 'Laporan Laba Rugi',

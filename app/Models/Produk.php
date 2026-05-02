@@ -18,6 +18,12 @@ class Produk extends Model
         return $this->hasMany(ItemPemasukan::class, 'id_produk', 'id');
     }
 
+   
+    public function setNamaProdukAttribute($value)
+    {
+        $this->attributes['nama_produk'] = mb_strtolower($value, 'UTF-8');
+    }
+
 }
 
 

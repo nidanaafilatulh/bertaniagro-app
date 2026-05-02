@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('jenis_pengeluaran', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
+            $table->string('nama', 50)->unique();
+            $table->unsignedBigInteger('id_beban');
+            $table->foreign('id_beban')->references('id')->on('jenis_beban')->onDelete('cascade');
             $table->timestamps();
         });
     }

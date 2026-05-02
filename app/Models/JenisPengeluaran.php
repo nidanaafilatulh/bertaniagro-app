@@ -10,7 +10,13 @@ class JenisPengeluaran extends Model
 
     protected $fillable = [
         'nama',
+        'id_beban',
     ];
+
+    public function jenisBeban()
+    {
+        return $this->belongsTo(JenisBeban::class, 'id_beban');
+    }
 
     public function itemPengeluaran()
     {

@@ -214,6 +214,18 @@
                                 </div>
                                 <div class="tab-pane" id="tabs-items" role="tabpanel">
                                     <div class="mb-3">
+                                        <a href="/jenis-beban/create"
+                                            class="btn btn-primary btn-5 d-none d-sm-inline-block">
+                                            <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-2">
+                                                <path d="M12 5l0 14" />
+                                                <path d="M5 12l14 0" />
+                                            </svg>
+                                            Tambah Jenis Beban
+                                        </a>
                                         <a href="/jenis-pengeluaran/create"
                                             class="btn btn-success btn-5 d-none d-sm-inline-block">
                                             <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
@@ -243,12 +255,452 @@
                                         <table class="table table-vcenter table-mobile-md card-table">
                                             <thead>
                                                 <tr>
+                                                    <th>Jenis Beban</th>
                                                     <th>Jenis Pengeluaran</th>
                                                     <th>Item Pengeluaran</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($daftar_jenis_pengeluaran as $jenis)
+                                                @foreach ($daftar_jenis_beban as $beban)
+                                                    @if ($beban->jenisPengeluaran->isNotEmpty())
+                                                        @php
+                                                            $firstJenis = $beban->jenisPengeluaran->first();
+                                                        @endphp
+
+                                                        <tr>
+                                                            <td rowspan="{{ $beban->jenisPengeluaran->count() }}">
+                                                                {{ $beban->nama }}
+
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                    height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round"
+                                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                    <path stroke="none" d="M0 0h24v24H0z"
+                                                                        fill="none" />
+                                                                    <path d="M4 7l16 0" />
+                                                                    <path d="M10 11l0 6" />
+                                                                    <path d="M14 11l0 6" />
+                                                                    <path
+                                                                        d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                </svg>
+                                                            </td>
+                                                            @if ($firstJenis->itemPengeluaran->isNotEmpty())
+                                                                <td>
+                                                                    {{ $firstJenis->nama }}
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path
+                                                                            d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                        <path
+                                                                            d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                        <path d="M16 5l3 3" />
+                                                                    </svg>
+
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path d="M4 7l16 0" />
+                                                                        <path d="M10 11l0 6" />
+                                                                        <path d="M14 11l0 6" />
+                                                                        <path
+                                                                            d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                        <path
+                                                                            d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                    </svg>
+                                                                </td>
+                                                                <td>
+                                                                    @foreach ($firstJenis->itemPengeluaran as $item)
+                                                                        <div>
+                                                                            {{ $item->nama }}
+                                                                            @if ($item->transaksiPengeluaran->count() > 0)
+                                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="24" height="24"
+                                                                                    viewBox="0 0 24 24" fill="none"
+                                                                                    stroke="currentColor" stroke-width="2"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                                    <path stroke="none" d="M0 0h24v24H0z"
+                                                                                        fill="none" />
+                                                                                    <path
+                                                                                        d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                                    <path
+                                                                                        d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                                    <path d="M16 5l3 3" />
+                                                                                </svg>
+
+                                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="24" height="24"
+                                                                                    viewBox="0 0 24 24" fill="none"
+                                                                                    stroke="currentColor" stroke-width="2"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                                    <path stroke="none" d="M0 0h24v24H0z"
+                                                                                        fill="none" />
+                                                                                    <path d="M4 7l16 0" />
+                                                                                    <path d="M10 11l0 6" />
+                                                                                    <path d="M14 11l0 6" />
+                                                                                    <path
+                                                                                        d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                                    <path
+                                                                                        d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                                </svg>
+                                                                            @else
+                                                                                <a href="#" data-bs-toggle="modal"
+                                                                                    data-bs-target="#modal-edit-item"
+                                                                                    data-id-item="{{ $item->id }}"
+                                                                                    data-nama-item="{{ $item->nama }}"
+                                                                                    data-id-jenis="{{ $firstJenis->id }}">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        width="24" height="24"
+                                                                                        viewBox="0 0 24 24" fill="none"
+                                                                                        stroke="currentColor"
+                                                                                        stroke-width="2"
+                                                                                        stroke-linecap="round"
+                                                                                        stroke-linejoin="round"
+                                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                                        <path stroke="none"
+                                                                                            d="M0 0h24v24H0z"
+                                                                                            fill="none" />
+                                                                                        <path
+                                                                                            d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                                        <path
+                                                                                            d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                                        <path d="M16 5l3 3" />
+                                                                                    </svg>
+                                                                                </a>
+                                                                                <a href="#" data-bs-toggle="modal"
+                                                                                    data-bs-target="#modal-delete-item"
+                                                                                    data-id-item="{{ $item->id }}"
+                                                                                    style="color: red;">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        width="24" height="24"
+                                                                                        viewBox="0 0 24 24" fill="none"
+                                                                                        stroke="currentColor"
+                                                                                        stroke-width="2"
+                                                                                        stroke-linecap="round"
+                                                                                        stroke-linejoin="round"
+                                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                                        <path stroke="none"
+                                                                                            d="M0 0h24v24H0z"
+                                                                                            fill="none" />
+                                                                                        <path d="M4 7l16 0" />
+                                                                                        <path d="M10 11l0 6" />
+                                                                                        <path d="M14 11l0 6" />
+                                                                                        <path
+                                                                                            d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                                        <path
+                                                                                            d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                                    </svg>
+                                                                                </a>
+                                                                            @endif
+                                                                        </div>
+                                                                    @endforeach
+                                                                </td>
+                                                            @else
+                                                                <td>
+                                                                    {{ $firstJenis->nama }}
+                                                                    <a href="#" data-bs-toggle="modal"
+                                                                        data-bs-target="#modal-edit-jenis"
+                                                                        data-id-beban ="{{ $beban->id }}"
+                                                                        data-id-jenis="{{ $firstJenis->id }}"
+                                                                        data-nama-jenis="{{ $firstJenis->nama }}">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            width="24" height="24"
+                                                                            viewBox="0 0 24 24" fill="none"
+                                                                            stroke="currentColor" stroke-width="2"
+                                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                                            class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                            <path stroke="none" d="M0 0h24v24H0z"
+                                                                                fill="none" />
+                                                                            <path
+                                                                                d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                            <path
+                                                                                d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                            <path d="M16 5l3 3" />
+                                                                        </svg>
+                                                                    </a>
+                                                                    <a href="#" data-bs-toggle="modal"
+                                                                        data-bs-target="#modal-delete-jenis"
+                                                                        data-id-jenis="{{ $firstJenis->id }}"
+                                                                        style="color: red;">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            width="24" height="24"
+                                                                            viewBox="0 0 24 24" fill="none"
+                                                                            stroke="currentColor" stroke-width="2"
+                                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                                            class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                            <path stroke="none" d="M0 0h24v24H0z"
+                                                                                fill="none" />
+                                                                            <path d="M4 7l16 0" />
+                                                                            <path d="M10 11l0 6" />
+                                                                            <path d="M14 11l0 6" />
+                                                                            <path
+                                                                                d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                            <path
+                                                                                d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                        </svg>
+                                                                    </a>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="text-secondary">Belum ada item</span>
+                                                                </td>
+                                                            @endif
+                                                        </tr>
+
+                                                        @foreach ($beban->jenisPengeluaran->skip(1) as $jenis)
+                                                            <tr>
+                                                                @if ($jenis->itemPengeluaran->isNotEmpty())
+                                                                    <td>
+                                                                        {{ $jenis->nama }}
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            width="24" height="24"
+                                                                            viewBox="0 0 24 24" fill="none"
+                                                                            stroke="currentColor" stroke-width="2"
+                                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                                            class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                            <path stroke="none" d="M0 0h24v24H0z"
+                                                                                fill="none" />
+                                                                            <path
+                                                                                d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                            <path
+                                                                                d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                            <path d="M16 5l3 3" />
+                                                                        </svg>
+
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            width="24" height="24"
+                                                                            viewBox="0 0 24 24" fill="none"
+                                                                            stroke="currentColor" stroke-width="2"
+                                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                                            class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                            <path stroke="none" d="M0 0h24v24H0z"
+                                                                                fill="none" />
+                                                                            <path d="M4 7l16 0" />
+                                                                            <path d="M10 11l0 6" />
+                                                                            <path d="M14 11l0 6" />
+                                                                            <path
+                                                                                d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                            <path
+                                                                                d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                        </svg>
+                                                                    </td>
+                                                                    <td>
+                                                                        @foreach ($jenis->itemPengeluaran as $item)
+                                                                            <div>
+                                                                                {{ $item->nama }}
+                                                                                @if ($item->transaksiPengeluaran->count() > 0)
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        width="24" height="24"
+                                                                                        viewBox="0 0 24 24" fill="none"
+                                                                                        stroke="currentColor"
+                                                                                        stroke-width="2"
+                                                                                        stroke-linecap="round"
+                                                                                        stroke-linejoin="round"
+                                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                                        <path stroke="none"
+                                                                                            d="M0 0h24v24H0z"
+                                                                                            fill="none" />
+                                                                                        <path
+                                                                                            d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                                        <path
+                                                                                            d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                                        <path d="M16 5l3 3" />
+                                                                                    </svg>
+
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        width="24" height="24"
+                                                                                        viewBox="0 0 24 24" fill="none"
+                                                                                        stroke="currentColor"
+                                                                                        stroke-width="2"
+                                                                                        stroke-linecap="round"
+                                                                                        stroke-linejoin="round"
+                                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                                        <path stroke="none"
+                                                                                            d="M0 0h24v24H0z"
+                                                                                            fill="none" />
+                                                                                        <path d="M4 7l16 0" />
+                                                                                        <path d="M10 11l0 6" />
+                                                                                        <path d="M14 11l0 6" />
+                                                                                        <path
+                                                                                            d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                                        <path
+                                                                                            d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                                    </svg>
+                                                                                @else
+                                                                                    <a href="#"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#modal-edit-item"
+                                                                                        data-id-item="{{ $item->id }}"
+                                                                                        data-nama-item="{{ $item->nama }}"
+                                                                                        data-id-jenis="{{ $jenis->id }}">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                            width="24" height="24"
+                                                                                            viewBox="0 0 24 24"
+                                                                                            fill="none"
+                                                                                            stroke="currentColor"
+                                                                                            stroke-width="2"
+                                                                                            stroke-linecap="round"
+                                                                                            stroke-linejoin="round"
+                                                                                            class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                                            <path stroke="none"
+                                                                                                d="M0 0h24v24H0z"
+                                                                                                fill="none" />
+                                                                                            <path
+                                                                                                d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                                            <path
+                                                                                                d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                                            <path d="M16 5l3 3" />
+                                                                                        </svg>
+                                                                                    </a>
+                                                                                    <a href="#"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#modal-delete-item"
+                                                                                        data-id-item="{{ $item->id }}"
+                                                                                        style="color: red;">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                            width="24" height="24"
+                                                                                            viewBox="0 0 24 24"
+                                                                                            fill="none"
+                                                                                            stroke="currentColor"
+                                                                                            stroke-width="2"
+                                                                                            stroke-linecap="round"
+                                                                                            stroke-linejoin="round"
+                                                                                            class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                                            <path stroke="none"
+                                                                                                d="M0 0h24v24H0z"
+                                                                                                fill="none" />
+                                                                                            <path d="M4 7l16 0" />
+                                                                                            <path d="M10 11l0 6" />
+                                                                                            <path d="M14 11l0 6" />
+                                                                                            <path
+                                                                                                d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                                            <path
+                                                                                                d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                                        </svg>
+                                                                                    </a>
+                                                                                @endif
+                                                                            </div>
+                                                                        @endforeach
+                                                                    </td>
+                                                                @else
+                                                                    <td>
+                                                                        {{ $jenis->nama }}
+
+                                                                        <a href="#" data-bs-toggle="modal"
+                                                                            data-bs-target="#modal-edit-jenis"
+                                                                            data-id-beban="{{ $beban->id }}"
+                                                                            data-id-jenis="{{ $jenis->id }}"
+                                                                            data-nama-jenis="{{ $jenis->nama }}">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                width="24" height="24"
+                                                                                viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="2"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                                <path stroke="none" d="M0 0h24v24H0z"
+                                                                                    fill="none" />
+                                                                                <path
+                                                                                    d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                                <path
+                                                                                    d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                                <path d="M16 5l3 3" />
+                                                                            </svg>
+                                                                        </a>
+                                                                        <a href="#" data-bs-toggle="modal"
+                                                                            data-bs-target="#modal-delete-jenis"
+                                                                            data-id-jenis="{{ $jenis->id }}"
+                                                                            style="color: red;">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                width="24" height="24"
+                                                                                viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="2"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                                <path stroke="none" d="M0 0h24v24H0z"
+                                                                                    fill="none" />
+                                                                                <path d="M4 7l16 0" />
+                                                                                <path d="M10 11l0 6" />
+                                                                                <path d="M14 11l0 6" />
+                                                                                <path
+                                                                                    d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                                <path
+                                                                                    d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                            </svg>
+                                                                        </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span class="text-secondary">Belum ada item</span>
+                                                                    </td>
+                                                                @endif
+                                                            </tr>
+                                                        @endforeach
+                                                    @else
+                                                        <tr>
+                                                            <td>
+                                                                {{ $beban->nama }}
+                                                                <a href="#" data-bs-toggle="modal"
+                                                                    data-bs-target="#modal-edit-beban"
+                                                                    data-id-beban="{{ $beban->id }}"
+                                                                    data-nama-beban="{{ $beban->nama }}">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path
+                                                                            d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                                        <path
+                                                                            d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+                                                                        <path d="M16 5l3 3" />
+                                                                    </svg>
+                                                                </a>
+                                                                <a href="#" data-bs-toggle="modal"
+                                                                    data-bs-target="#modal-delete-beban"
+                                                                    data-id-beban="{{ $beban->id }}"
+                                                                    style="color: red;">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path d="M4 7l16 0" />
+                                                                        <path d="M10 11l0 6" />
+                                                                        <path d="M14 11l0 6" />
+                                                                        <path
+                                                                            d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                                        <path
+                                                                            d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                                    </svg>
+                                                                </a>
+                                                            </td>
+
+                                                            <td colspan="2" class="text-secondary">
+                                                                Belum ada jenis pengeluaran
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+
+                                                {{-- @foreach ($daftar_jenis_pengeluaran as $jenis)
                                                     @if ($jenis->itemPengeluaran->isNotEmpty())
                                                         @foreach ($jenis->itemPengeluaran as $index => $item)
                                                             <tr>
@@ -416,7 +868,7 @@
                                                             <td class="text-muted">Belum ada item</td>
                                                         </tr>
                                                     @endif
-                                                @endforeach
+                                                @endforeach --}}
                                             </tbody>
                                         </table>
                                     </div>
@@ -522,6 +974,48 @@
         </div>
     </div>
 
+    <div class="modal modal-blur fade" id="modal-edit-beban" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <form id="editBebanForm" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Jenis Beban</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            @if ($errors->has('nama_jenis_beban'))
+                                <div class="alert alert-danger">
+                                    {{ $errors->first('nama_jenis_beban') }}
+                                </div>
+                            @endif
+                            <div id="beban-error" class="alert alert-danger d-none mb-3"></div>
+                            <label class="form-label">Nama Jenis Beban*</label>
+                            <input type="text" name="nama_jenis_beban" id="edit_jenis_beban_input"
+                                class="form-control @error('nama_jenis_beban') is-invalid @enderror"
+                                placeholder="Masukkan nama jenis beban" required>
+                            @error('nama_jenis_beban')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn me-auto" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal modal-blur fade" id="modal-edit-jenis" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -536,6 +1030,22 @@
                     </div>
 
                     <div class="modal-body">
+                        <div class="mb-3">
+                            @if ($errors->has('nama_jenis_pengeluaran'))
+                                <div class="alert alert-danger">
+                                    {{ $errors->first('nama_jenis_pengeluaran') }}
+                                </div>
+                            @endif
+                            <div id="jenis-error" class="alert alert-danger d-none mb-3"></div>
+                            <label class="form-label">Jenis Beban*</label>
+                            <select class="form-select" name="jenis_beban" id="edit_jenis_beban_in_jenis_pengeluaran"
+                                required>
+                                <option value="">Pilih Jenis Beban</option>
+                                @foreach ($daftar_jenis_beban as $beban)
+                                    <option value="{{ $beban->id }}">{{ $beban->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label class="form-label">Nama Jenis Pengeluaran*</label>
                             <input type="text" name="nama_jenis_pengeluaran" id="edit_jenis_pengeluaran_input"
@@ -567,6 +1077,12 @@
 
                     <div class="modal-body">
                         <div class="mb-3">
+                            @if ($errors->has('nama_item_pengeluaran'))
+                                <div class="alert alert-danger">
+                                    {{ $errors->first('nama_item_pengeluaran') }}
+                                </div>
+                            @endif
+                            <div id="item-error" class="alert alert-danger d-none"></div>
                             <label class="form-label">Jenis Pengeluaran*</label>
                             <select class="form-select" name="jenis_pengeluaran" id="edit_jenis_pengeluaran_in_item"
                                 required>
@@ -588,6 +1104,29 @@
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-blur fade" id="modal-delete-beban" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-title">Hapus Data Beban Pengeluaran</div>
+                    <div>
+                        Apakah kamu yakin akan menghapus jenis beban ini?
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link link-secondary me-auto"
+                        data-bs-dismiss="modal">Batal</button>
+                    <form id="deleteBebanForm" method="POST" class="d-inline">
+                        @csrf
+                        @method('delete')
+                        <button type="submit" class="btn btn-danger">Hapus</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -641,7 +1180,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const deleteModal = document.getElementById('modal-delete');
-            const deleteProdukModal = document.getElementById('modal-delete-produk');
+            const deleteBebanModal = document.getElementById('modal-delete-beban');
             const deleteItemModal = document.getElementById('modal-delete-item');
             const deleteJenisModal = document.getElementById('modal-delete-jenis');
 
@@ -670,6 +1209,15 @@
                 // set action form
                 let form = document.getElementById('deleteJenisForm');
                 form.action = "/jenis-pengeluaran/" + id;
+            });
+
+            deleteBebanModal.addEventListener('show.bs.modal', function(event) {
+                let button = event.relatedTarget;
+                let id = button.getAttribute('data-id-beban');
+
+                // set action form
+                let form = document.getElementById('deleteBebanForm');
+                form.action = "/jenis-beban/" + id;
             });
         });
     </script>
@@ -777,26 +1325,158 @@
         });
     </script>
     <script>
+        const daftarJenisBeban = @json($daftar_jenis_beban);
+    </script>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const modal = document.getElementById('modal-edit-jenis');
 
+            const modal = document.getElementById('modal-edit-beban');
+            const form = document.getElementById('editBebanForm');
+            const input = document.getElementById('edit_jenis_beban_input');
+            const errorBox = document.getElementById('beban-error');
+
+            let currentId = null;
+
+            // buka modal + isi data
             modal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
 
-                const id = button.getAttribute('data-id-jenis');
-                const nama = button.getAttribute('data-nama-jenis');
+                const id = button.getAttribute('data-id-beban');
+                const nama = button.getAttribute('data-nama-beban');
 
-                // Set value ke input
-                document.getElementById('edit_jenis_pengeluaran_input').value = nama;
+                currentId = id;
 
-                // Set action form (sesuaikan route kamu)
-                document.getElementById('editJenisForm').action = `/jenis-pengeluaran/${id}`;
+                input.value = nama;
+                form.action = `/jenis-beban/${id}`;
+
+                // reset error
+                errorBox.classList.add('d-none');
+                errorBox.innerText = '';
+                input.classList.remove('is-invalid');
             });
-        });
 
+            // fungsi normalisasi
+            const normalize = (val) => val.toLowerCase().trim().replace(/\s+/g, '');
+
+            // validasi saat submit
+            form.addEventListener('submit', function(e) {
+
+                const inputNama = normalize(input.value);
+                let isDuplicate = false;
+
+                daftarJenisBeban.forEach(item => {
+
+                    // skip data yang sedang diedit
+                    if (item.id == currentId) return;
+
+                    const namaDb = normalize(item.nama);
+
+                    if (inputNama === namaDb) {
+                        isDuplicate = true;
+                    }
+                });
+
+                if (isDuplicate) {
+                    e.preventDefault();
+
+                    // tampilkan error
+                    errorBox.classList.remove('d-none');
+                    errorBox.innerText = 'Nama jenis beban sudah ada!';
+
+                    // tandai input
+                    input.classList.add('is-invalid');
+                }
+
+            });
+
+            // hapus error saat user mengetik
+            input.addEventListener('input', function() {
+                input.classList.remove('is-invalid');
+                errorBox.classList.add('d-none');
+            });
+
+        });
+    </script>
+    <script>
+        const daftarJenisPengeluaran = @json($daftar_jenis_pengeluaran);
 
         document.addEventListener("DOMContentLoaded", function() {
+
+            const modalJenis = document.getElementById('modal-edit-jenis');
+            const form = document.getElementById('editJenisForm');
+            const inputNama = document.getElementById('edit_jenis_pengeluaran_input');
+            const selectBeban = document.getElementById('edit_jenis_beban_in_jenis_pengeluaran');
+            const errorBox = document.getElementById('jenis-error');
+
+            let currentId = null;
+
+            modalJenis.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+
+                const idJenis = button.getAttribute('data-id-jenis');
+                const namaJenis = button.getAttribute('data-nama-jenis');
+                const idBeban = button.getAttribute('data-id-beban');
+
+                currentId = idJenis;
+
+                inputNama.value = namaJenis;
+                selectBeban.value = idBeban;
+                form.action = `/jenis-pengeluaran/${idJenis}`;
+
+
+                errorBox.classList.add('d-none');
+                errorBox.innerText = '';
+                inputNama.classList.remove('is-invalid');
+            });
+
+            const normalize = (val) => val.toLowerCase().trim().replace(/\s+/g, '');
+
+            form.addEventListener('submit', function(e) {
+
+                const namaInput = normalize(inputNama.value);
+                let isDuplicate = false;
+
+                daftarJenisPengeluaran.forEach(item => {
+
+                    if (item.id == currentId) return;
+
+                    const namaDb = normalize(item.nama);
+
+                    if (namaInput === namaDb) {
+                        isDuplicate = true;
+                    }
+                });
+
+                if (isDuplicate) {
+                    e.preventDefault();
+
+                    errorBox.classList.remove('d-none');
+                    errorBox.innerText = 'Nama jenis pengeluaran sudah ada!';
+
+                    inputNama.classList.add('is-invalid');
+                }
+
+            });
+
+            inputNama.addEventListener('input', function() {
+                inputNama.classList.remove('is-invalid');
+                errorBox.classList.add('d-none');
+            });
+
+        });
+    </script>
+    <script>
+        const daftarItemPengeluaran = @json($daftar_item_pengeluaran);
+
+        document.addEventListener("DOMContentLoaded", function() {
+
             const modal = document.getElementById('modal-edit-item');
+            const form = document.getElementById('editItemForm');
+            const inputNama = document.getElementById('edit_item_pengeluaran_input');
+            const selectJenis = document.getElementById('edit_jenis_pengeluaran_in_item');
+            const errorBox = document.getElementById('item-error');
+
+            let currentId = null;
 
             modal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
@@ -805,13 +1485,161 @@
                 const namaItem = button.getAttribute('data-nama-item');
                 const idJenis = button.getAttribute('data-id-jenis');
 
+                currentId = idItem;
 
-                document.getElementById('edit_item_pengeluaran_input').value = namaItem;
-                document.getElementById('edit_jenis_pengeluaran_in_item').value = idJenis;
-                document.getElementById('editItemForm').action = `/item-pengeluaran/${idItem}`;
+                inputNama.value = namaItem;
+                selectJenis.value = idJenis;
+                form.action = `/item-pengeluaran/${idItem}`;
+
+                // reset error
+                errorBox.classList.add('d-none');
+                errorBox.innerText = '';
+                inputNama.classList.remove('is-invalid');
+                selectJenis.classList.remove('is-invalid');
             });
+
+            // normalisasi
+            const normalize = (val) => val.toLowerCase().trim().replace(/\s+/g, '');
+
+            form.addEventListener('submit', function(e) {
+
+                const namaInput = normalize(inputNama.value);
+                const jenisInput = selectJenis.value;
+
+                let isDuplicate = false;
+
+                daftarItemPengeluaran.forEach(item => {
+
+                    // skip dirinya sendiri
+                    if (item.id == currentId) return;
+
+                    const namaDb = normalize(item.nama);
+                    const jenisDb = item.jenis_pengeluaran_id; // pastikan field ini sesuai!
+
+                    if (namaInput === namaDb && jenisInput == jenisDb) {
+                        isDuplicate = true;
+                    }
+                });
+
+                if (isDuplicate) {
+                    e.preventDefault();
+
+                    errorBox.classList.remove('d-none');
+                    errorBox.innerText = 'Item pengeluaran dengan jenis yang sama sudah ada!';
+
+                    selectJenis.classList.add('is-invalid');
+                    inputNama.classList.add('is-invalid');
+                }
+
+            });
+
+            [inputNama, selectJenis].forEach(el => {
+                el.addEventListener('input', () => {
+                    el.classList.remove('is-invalid');
+                    errorBox.classList.add('d-none');
+                });
+            });
+
         });
     </script>
+    @if (session('open_modal') == 'edit-beban')
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+
+                // aktifkan tab dulu (kalau pakai tab)
+                let targetTab = document.querySelector('a[href="#tabs-items"]');
+                if (targetTab) {
+                    let tab = new bootstrap.Tab(targetTab);
+                    tab.show();
+                }
+
+                // buka modal setelah delay kecil
+                setTimeout(() => {
+                    let modal = new bootstrap.Modal(document.getElementById('modal-edit-beban'));
+                    modal.show();
+
+                    // isi ulang input dari old()
+                    document.getElementById('edit_jenis_beban_input').value = "{{ old('nama_jenis_beban') }}";
+
+                    // set ulang action form
+                    document.getElementById('editBebanForm').action = "/jenis-beban/{{ session('edit_id') }}";
+
+                }, 200);
+
+            });
+        </script>
+    @endif
+    @if (session('open_modal') == 'edit-jenis')
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+
+                // aktifkan tab
+                let targetTab = document.querySelector('a[href="#tabs-items"]');
+                if (targetTab) {
+                    let tab = new bootstrap.Tab(targetTab);
+                    tab.show();
+                }
+
+                setTimeout(() => {
+                    let modal = new bootstrap.Modal(document.getElementById('modal-edit-jenis'));
+                    modal.show();
+
+                    // isi ulang input
+                    document.getElementById('edit_jenis_pengeluaran_input').value =
+                        "{{ old('nama_jenis_pengeluaran') }}";
+                    document.getElementById('edit_jenis_beban_in_jenis_pengeluaran').value =
+                        "{{ old('jenis_beban') }}";
+
+                    // set action
+                    document.getElementById('editJenisForm').action =
+                        "/jenis-pengeluaran/{{ session('edit_id') }}";
+
+                }, 200);
+
+            });
+        </script>
+    @endif
+    @if (session('open_modal') == 'edit-item')
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+
+                // aktifkan tab dulu (kalau pakai tab)
+                let targetTab = document.querySelector('a[href="#tabs-items"]');
+                if (targetTab) {
+                    let tab = new bootstrap.Tab(targetTab);
+                    tab.show();
+                }
+
+                setTimeout(() => {
+
+                    let modalEl = document.getElementById('modal-edit-item');
+                    if (!modalEl) return;
+
+                    let modal = new bootstrap.Modal(modalEl);
+                    modal.show();
+
+                    // isi ulang input dari old()
+                    document.getElementById('edit_item_pengeluaran_input').value =
+                        "{{ old('nama_item_pengeluaran') }}";
+
+                    // set ulang select
+                    document.getElementById('edit_jenis_pengeluaran_in_item').value =
+                        "{{ old('jenis_pengeluaran') }}";
+
+                    // set ulang action form
+                    document.getElementById('editItemForm').action =
+                        "/item-pengeluaran/{{ session('edit_id') }}";
+
+                    // fokus ke input (optional, tapi bagus UX)
+                    let invalid = document.querySelector('#modal-edit-item .is-invalid');
+                    if (invalid) {
+                        invalid.focus();
+                    }
+
+                }, 200);
+            });
+        </script>
+    @endif
 @endsection
 <script>
     document.addEventListener("DOMContentLoaded", function() {

@@ -11,7 +11,7 @@
                         <a href="/pengeluaran#tabs-items">Kembali</a>
                     </div>
                     <h2 class="page-title">
-                        Tambah Data Jenis Pengeluaran
+                        Tambah Data Jenis Beban
                     </h2>
                 </div>
             </div>
@@ -29,41 +29,23 @@
                         </h3>
                     </div> --}}
                     <div class="card-body">
-                        <form class="space-y" method="POST" action="/jenis-pengeluaran" enctype="multipart/form-data">
+                        <form class="space-y" method="POST" action="/jenis-beban" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
-                                <div class="col-4"><label class="form-label">Jenis Beban*</label></div>
-                                <div class="col-3"><label class="form-label">Nama Jenis Pengeluaran*</label></div>
+                                <div class="col-4"><label class="form-label">Nama Jenis Beban*</label></div>
                             </div>
                             <div id="jenis-container">
                                 @php
-                                    $jenisOld = old('nama_jenis_pengeluaran', ['']); // minimal 1 baris
+                                    $jenisOld = old('nama_jenis_beban', ['']); // minimal 1 baris
                                 @endphp
 
-                                @foreach ($jenisOld as $i => $jenis)
+                                @foreach ($jenisOld as $i => $item)
                                     <div class="row mb-1 jenis-row">
-                                        <div class="col-4">
-                                            <select name="jenis_beban[]"
-                                                class="form-select produk-select @error('jenis_beban.' . $i) is-invalid @enderror"
-                                                required>
-                                                <option value="">Pilih Jenis Beban</option>
-                                                @foreach ($daftar_jenis_beban as $jenis)
-                                                    <option value="{{ $jenis->id }}"
-                                                        {{ old('jenis_beban.' . $i) == $jenis->id ? 'selected' : '' }}>
-                                                        {{ $jenis->nama }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" name="nama_jenis_pengeluaran[]"
-                                                class="form-control @error('nama_jenis_pengeluaran.' . $i) is-invalid @enderror"
-                                                value="{{ old('nama_jenis_pengeluaran.' . $i) }}" placeholder="Masukkan nama jenis pengeluaran"
-                                                required>
-
-                                            <p class="invalid-feedback">
-                                                {{ $errors->first('nama_jenis_pengeluaran.' . $i) }}
-                                            </p>
+                                        <div class="col-11">
+                                            <input type="text" name="nama_jenis_beban[]"
+                                                class="form-control @error('nama_jenis_beban.*') is-invalid @enderror"
+                                                value="{{ old('nama_jenis_beban.' . $i) }}" placeholder="Masukkan nama jenis beban" required>
+                                            <p class="invalid-feedback">{{ $errors->first('nama_jenis_beban.' . $i) }}</p>
                                         </div>
                                         <div class="col-1 d-flex justify-content-center align-items-center">
                                             <button type="button" class="btn-remove border-0 bg-transparent mt-1">
@@ -82,7 +64,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-2">
-                                    <a href="#" id="btn-tambah-jenis" class="btn btn-primary d-none d-sm-inline-block">
+                                    <a href="#" id="btn-tambah-jenis"
+                                        class="btn btn-primary d-none d-sm-inline-block">
                                         <!-- Download SVG icon from http://tabler.io/icons/icon/plus -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -112,7 +95,7 @@
         document.addEventListener("DOMContentLoaded", function() {
 
             const container = document.getElementById("jenis-container");
-
+          
             // Add new product row
             document.getElementById("btn-tambah-jenis").addEventListener("click", function(e) {
                 e.preventDefault();

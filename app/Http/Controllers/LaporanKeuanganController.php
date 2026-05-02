@@ -300,139 +300,58 @@ class LaporanKeuanganController extends Controller
     {
         Carbon::setLocale('id');
         $today = Carbon::now()->translatedFormat('d F Y');
+        $tanggal_mulai_tanda = Carbon::parse($request->tanggal_mulai)->translatedFormat('d F Y');
+        $tanggal_akhir_tanda = Carbon::parse($request->tanggal_akhir)->translatedFormat('d F Y');
         $tanggal_mulai = $request->tanggal_mulai;
         $tanggal_akhir = $request->tanggal_akhir;
         $tanggal = now()->toDateString();
         
-        $queryPemasukan = DB::table('item_pemasukan as i')
-            ->join('produk as p', 'i.id_produk', '=', 'p.id')
-            ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-            ->select(
-                'p.nama_produk as produk',
-                'p.satuan',
-                't.pelanggan',
-                DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-            )->whereBetween(
-                't.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir]
-            )->groupBy(
-                'p.nama_produk', 
-                'p.satuan',
-                't.pelanggan'
-            )->orderBy('p.nama_produk', 'asc');
+        // Pendapatan
+        $pendapatan = DB::table('transaksi_pemasukan')
+            ->whereBetween('tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
+            ->sum(DB::raw('jumlah'));
 
-        // Selada non-pack
-        $dataSelada = $queryPemasukan->get()->filter(function ($item) {
-            return strtolower($item->produk) === 'selada' 
-            && !(strtolower($item->satuan) === 'pack'&& in_array($item->pelanggan, ['Aeon Mall', 'Istana Buah']));
-        });
-        $totalSeladaOmset = $dataSelada->sum('omset');
-
-        // Aeon Mall
-        $queryAeonPack = DB::table('item_pemasukan as i')
-            ->join('produk as p', 'i.id_produk', '=', 'p.id')
-            ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-            ->select(
-                't.tanggal_transaksi',
-                'p.nama_produk as produk',
-                'p.satuan',
-                DB::raw('SUM(i.kuantitas) as total_kuantitas'),
-                DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-            )
-            ->where('pelanggan', 'Aeon Mall')
-            ->where('p.satuan', 'Pack')
-            ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'p.nama_produk', 'p.satuan')
-            ->orderBy('t.tanggal_transaksi', 'asc');
-        
-        $dataAeon = $queryAeonPack->get();
-        $totalAeonOmset = $dataAeon->sum('omset');
-
-        // Istana Buah
-        $queryIstanaPack = DB::table('item_pemasukan as i')
-            ->join('produk as p', 'i.id_produk', '=', 'p.id')
-            ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-            ->select(
-                't.tanggal_transaksi',
-                'p.nama_produk as produk',
-                'p.satuan',
-                DB::raw('SUM(i.kuantitas) as total_kuantitas'),
-                DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-            )
-            ->where('pelanggan', 'Istana Buah')
-            ->where('p.satuan', 'Pack')
-            ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'p.nama_produk', 'p.satuan')
-            ->orderBy('t.tanggal_transaksi', 'asc');
-        
-        $dataIstana = $queryIstanaPack->get();
-        $totalIstanaOmset = $dataIstana->sum('omset');
-
-        $queryLainnya = DB::table('item_pemasukan as i')
-                    ->join('produk as p', 'i.id_produk', '=', 'p.id')
-                    ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-                    ->select(
-                        't.tanggal_transaksi',
-                        'p.nama_produk as produk',
-                        'p.satuan',
-                        DB::raw('SUM(i.kuantitas) as total_kuantitas'),
-                        DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-                    )
-                    ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-                    ->where(function ($q) {
-                        // Rule 1: pelanggan AEON / IB → satuan != pack
-                        $q->where(function ($sub) {
-                            $sub->whereIn('pelanggan', ['Aeon Mall', 'Istana Buah'])
-                                ->whereRaw('LOWER(p.satuan) != "pack"');
-                        })
-                        // Rule 2: pelanggan lain → ambil semua satuan
-                        ->orWhere(function ($sub) {
-                            $sub->whereNotIn('pelanggan', ['Aeon Mall', 'Istana Buah']);
-                        });
-                    })
-
-                    // Rule 3: pengecualian selada satuan kg
-                    ->whereRaw('NOT (LOWER(p.nama_produk) = "selada")')
-
-                    ->groupBy('t.tanggal_transaksi', 'p.nama_produk', 'p.satuan')
-                    ->orderBy('t.tanggal_transaksi', 'asc');
+        $hpp = DB::table('transaksi_pengeluaran as t')
+                ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+                ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
+                ->join('jenis_beban as b', 'j.id_beban', '=', 'b.id')
+                ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
+                ->where('b.nama', 'hpp')
+                ->value(DB::raw('COALESCE(SUM(t.kuantitas * t.harga_per_item), 0)'));
 
 
-        // Rekap Penjualan Lainnya
-        $dataLainnya = $queryLainnya->get();
-        $totalLainnyaOmset = $dataLainnya->sum('omset');
-
-        $dataPemasukan = $queryPemasukan->get();
-        $totalOmsetPemasukan = $dataPemasukan->sum('omset');
-
-        $dataPengeluaran = DB::table('transaksi_pengeluaran as t')
+        $dataBebanPengeluaran = DB::table('transaksi_pengeluaran as t')
             ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
             ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
+            ->join('jenis_beban as b', 'j.id_beban', '=', 'b.id')
             ->select(
-                'j.nama as jenis_pengeluaran',
-                DB::raw('SUM(t. jumlah) as total_pengeluaran')
+                'b.nama as jenis_beban',
+                DB::raw('SUM(t.jumlah) as beban_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('j.id')
-            ->orderBy('j.id', 'asc')
+            ->whereNotIn('b.nama', ['hpp'])
+            ->groupBy('b.nama')
+            ->orderBy('b.nama', 'asc')
             ->get();
 
-        $totalPengeluaran = $dataPengeluaran->sum('total_pengeluaran');
+        $totalBebanPengeluaran = $dataBebanPengeluaran->sum('beban_pengeluaran');
 
-        $total =  $totalOmsetPemasukan - $totalPengeluaran;
+        $labaKotor =  $pendapatan - $hpp;
+        $labaBersihSebelumPajak = $labaKotor - $totalBebanPengeluaran;
+
 
         return view('pages.keuangan.labaRugi.index', [
             'title' => 'Laporan Laba Rugi',
             'tanggal_hari_ini' => $today,
             'tanggal' => $tanggal,
-            // 'pemasukan' => $dataPemasukan,
-            'total_selada_omset' => $totalSeladaOmset,
-            'total_aeon_omset' => $totalAeonOmset,
-            'total_istana_omset' => $totalIstanaOmset,
-            'total_lainnya_omset' => $totalLainnyaOmset,
-            'total_omset_pemasukan' => $totalOmsetPemasukan,
-            'pengeluaran' => $dataPengeluaran,
-            'total_pengeluaran' => $totalPengeluaran,
-            'total' => $total
+            'tanggal_mulai' => $tanggal_mulai_tanda,
+            'tanggal_akhir' => $tanggal_akhir_tanda,
+            'pendapatan' => $pendapatan,
+            'hpp' => $hpp,
+            'beban_pengeluaran' => $dataBebanPengeluaran,
+            'total_beban_pengeluaran' => $totalBebanPengeluaran,
+            'labaKotor' => $labaKotor,
+            'labaBersihSebelumPajak' => $labaBersihSebelumPajak,
         ]);
     }
 
@@ -443,122 +362,38 @@ class LaporanKeuanganController extends Controller
         $tanggal_mulai = $request->tanggal_mulai;
         $tanggal_akhir = $request->tanggal_akhir;
 
-        $queryPemasukan = DB::table('item_pemasukan as i')
-            ->join('produk as p', 'i.id_produk', '=', 'p.id')
-            ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-            ->select(
-                'p.nama_produk as produk',
-                'p.satuan',
-                't.pelanggan',
-                DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-            )->whereBetween(
-                't.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir]
-            )->groupBy(
-                'p.nama_produk', 
-                'p.satuan',
-                't.pelanggan'
-            )->orderBy('p.nama_produk', 'asc');
+         // Pendapatan
+        $pendapatan = DB::table('transaksi_pemasukan')
+            ->whereBetween('tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
+            ->sum(DB::raw('jumlah'));
 
-        // Selada non-pack
-        $dataSelada = $queryPemasukan->get()->filter(function ($item) {
-            return strtolower($item->produk) === 'selada' 
-            && !(strtolower($item->satuan) === 'pack'&& in_array($item->pelanggan, ['Aeon Mall', 'Istana Buah']));
-        });
-        $totalSeladaOmset = $dataSelada->sum('omset');
-
-        // Aeon Mall
-        $queryAeonPack = DB::table('item_pemasukan as i')
-            ->join('produk as p', 'i.id_produk', '=', 'p.id')
-            ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-            ->select(
-                't.tanggal_transaksi',
-                'p.nama_produk as produk',
-                'p.satuan',
-                DB::raw('SUM(i.kuantitas) as total_kuantitas'),
-                DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-            )
-            ->where('pelanggan', 'Aeon Mall')
-            ->where('p.satuan', 'Pack')
-            ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'p.nama_produk', 'p.satuan')
-            ->orderBy('t.tanggal_transaksi', 'asc');
-        
-        $dataAeon = $queryAeonPack->get();
-        $totalAeonOmset = $dataAeon->sum('omset');
-
-        // Istana Buah
-        $queryIstanaPack = DB::table('item_pemasukan as i')
-            ->join('produk as p', 'i.id_produk', '=', 'p.id')
-            ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-            ->select(
-                't.tanggal_transaksi',
-                'p.nama_produk as produk',
-                'p.satuan',
-                DB::raw('SUM(i.kuantitas) as total_kuantitas'),
-                DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-            )
-            ->where('pelanggan', 'Istana Buah')
-            ->where('p.satuan', 'Pack')
-            ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('t.tanggal_transaksi', 'p.nama_produk', 'p.satuan')
-            ->orderBy('t.tanggal_transaksi', 'asc');
-        
-        $dataIstana = $queryIstanaPack->get();
-        $totalIstanaOmset = $dataIstana->sum('omset');
-
-        $queryLainnya = DB::table('item_pemasukan as i')
-                    ->join('produk as p', 'i.id_produk', '=', 'p.id')
-                    ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
-                    ->select(
-                        't.tanggal_transaksi',
-                        'p.nama_produk as produk',
-                        'p.satuan',
-                        DB::raw('SUM(i.kuantitas) as total_kuantitas'),
-                        DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
-                    )
-                    ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
-
-                    ->where(function ($q) {
-                        // Rule 1: pelanggan AEON / IB → satuan != pack
-                        $q->where(function ($sub) {
-                            $sub->whereIn('pelanggan', ['Aeon Mall', 'Istana Buah'])
-                                ->whereRaw('LOWER(p.satuan) != "pack"');
-                        })
-                        // Rule 2: pelanggan lain → ambil semua satuan
-                        ->orWhere(function ($sub) {
-                            $sub->whereNotIn('pelanggan', ['Aeon Mall', 'Istana Buah']);
-                        });
-                    })
-
-                    // Rule 3: pengecualian selada satuan kg
-                    ->whereRaw('NOT (LOWER(p.nama_produk) = "selada")')
-
-                    ->groupBy('t.tanggal_transaksi', 'p.nama_produk', 'p.satuan')
-                    ->orderBy('t.tanggal_transaksi', 'asc');
+        $hpp = DB::table('transaksi_pengeluaran as t')
+                ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+                ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
+                ->join('jenis_beban as b', 'j.id_beban', '=', 'b.id')
+                ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
+                ->where('b.nama', 'hpp')
+                ->value(DB::raw('COALESCE(SUM(t.kuantitas * t.harga_per_item), 0)'));
 
 
-        // Rekap Penjualan Lainnya
-        $dataLainnya = $queryLainnya->get();
-        $totalLainnyaOmset = $dataLainnya->sum('omset');
-
-        $dataPemasukan = $queryPemasukan->get();
-        $totalOmsetPemasukan = $dataPemasukan->sum('omset');
-
-        $dataPengeluaran = DB::table('transaksi_pengeluaran as t')
+        $dataBebanPengeluaran = DB::table('transaksi_pengeluaran as t')
             ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
             ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
+            ->join('jenis_beban as b', 'j.id_beban', '=', 'b.id')
             ->select(
-                'j.nama as jenis_pengeluaran',
-                DB::raw('SUM(t. jumlah) as total_pengeluaran')
+                'b.nama as jenis_beban',
+                DB::raw('SUM(t.jumlah) as beban_pengeluaran')
             )
             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
-            ->groupBy('j.id')
-            ->orderBy('j.id', 'asc')
+            ->whereNotIn('b.nama', ['hpp'])
+            ->groupBy('b.nama')
+            ->orderBy('b.nama', 'asc')
             ->get();
 
-        $totalPengeluaran = $dataPengeluaran->sum('total_pengeluaran');
+        $totalBebanPengeluaran = $dataBebanPengeluaran->sum('beban_pengeluaran');
 
-        $total =  $totalOmsetPemasukan - $totalPengeluaran;
+        $labaKotor =  $pendapatan - $hpp;
+        $labaBersihSebelumPajak = $labaKotor - $totalBebanPengeluaran;
 
         $rentang_mulai = Carbon::parse($tanggal_mulai)->translatedFormat('d F Y');
         $rentang_akhir = Carbon::parse($tanggal_akhir)->translatedFormat('d F Y');
@@ -567,15 +402,12 @@ class LaporanKeuanganController extends Controller
             'title' => 'Laporan Laba Rugi',
             'tanggal_mulai' => $rentang_mulai,
             'tanggal_akhir' => $rentang_akhir,
-            // 'pemasukan' => $dataPemasukan,
-            'total_selada_omset' => $totalSeladaOmset,
-            'total_aeon_omset' => $totalAeonOmset,
-            'total_istana_omset' => $totalIstanaOmset,
-            'total_lainnya_omset' => $totalLainnyaOmset,
-            'total_omset_pemasukan' => $totalOmsetPemasukan,
-            'pengeluaran' => $dataPengeluaran,
-            'pengeluaran_total' => $totalPengeluaran,
-            'total' => $total
+            'pendapatan' => $pendapatan,
+            'hpp' => $hpp,
+            'beban_pengeluaran' => $dataBebanPengeluaran,
+            'total_beban_pengeluaran' => $totalBebanPengeluaran,
+            'labaKotor' => $labaKotor,
+            'labaBersihSebelumPajak' => $labaBersihSebelumPajak,
        ])->render();
 
         $mpdf = new \Mpdf\Mpdf();
@@ -590,3 +422,156 @@ class LaporanKeuanganController extends Controller
 
    
 }
+
+
+// public function cetakLabaRugi(Request $request)
+//     {
+//         Carbon::setLocale('id');
+//         $today = Carbon::now()->translatedFormat('d F Y');
+//         $tanggal_mulai = $request->tanggal_mulai;
+//         $tanggal_akhir = $request->tanggal_akhir;
+
+//         $queryPemasukan = DB::table('item_pemasukan as i')
+//             ->join('produk as p', 'i.id_produk', '=', 'p.id')
+//             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
+//             ->select(
+//                 'p.nama_produk as produk',
+//                 'p.satuan',
+//                 't.pelanggan',
+//                 DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
+//             )->whereBetween(
+//                 't.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir]
+//             )->groupBy(
+//                 'p.nama_produk', 
+//                 'p.satuan',
+//                 't.pelanggan'
+//             )->orderBy('p.nama_produk', 'asc');
+
+//         // Selada non-pack
+//         $dataSelada = $queryPemasukan->get()->filter(function ($item) {
+//             return strtolower($item->produk) === 'selada' 
+//             && !(strtolower($item->satuan) === 'pack'&& in_array($item->pelanggan, ['Aeon Mall', 'Istana Buah']));
+//         });
+//         $totalSeladaOmset = $dataSelada->sum('omset');
+
+//         // Aeon Mall
+//         $queryAeonPack = DB::table('item_pemasukan as i')
+//             ->join('produk as p', 'i.id_produk', '=', 'p.id')
+//             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
+//             ->select(
+//                 't.tanggal_transaksi',
+//                 'p.nama_produk as produk',
+//                 'p.satuan',
+//                 DB::raw('SUM(i.kuantitas) as total_kuantitas'),
+//                 DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
+//             )
+//             ->where('pelanggan', 'Aeon Mall')
+//             ->where('p.satuan', 'Pack')
+//             ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
+//             ->groupBy('t.tanggal_transaksi', 'p.nama_produk', 'p.satuan')
+//             ->orderBy('t.tanggal_transaksi', 'asc');
+        
+//         $dataAeon = $queryAeonPack->get();
+//         $totalAeonOmset = $dataAeon->sum('omset');
+
+//         // Istana Buah
+//         $queryIstanaPack = DB::table('item_pemasukan as i')
+//             ->join('produk as p', 'i.id_produk', '=', 'p.id')
+//             ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
+//             ->select(
+//                 't.tanggal_transaksi',
+//                 'p.nama_produk as produk',
+//                 'p.satuan',
+//                 DB::raw('SUM(i.kuantitas) as total_kuantitas'),
+//                 DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
+//             )
+//             ->where('pelanggan', 'Istana Buah')
+//             ->where('p.satuan', 'Pack')
+//             ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
+//             ->groupBy('t.tanggal_transaksi', 'p.nama_produk', 'p.satuan')
+//             ->orderBy('t.tanggal_transaksi', 'asc');
+        
+//         $dataIstana = $queryIstanaPack->get();
+//         $totalIstanaOmset = $dataIstana->sum('omset');
+
+//         $queryLainnya = DB::table('item_pemasukan as i')
+//                     ->join('produk as p', 'i.id_produk', '=', 'p.id')
+//                     ->join('transaksi_pemasukan as t', 'i.no_transaksi', '=', 't.no_transaksi')
+//                     ->select(
+//                         't.tanggal_transaksi',
+//                         'p.nama_produk as produk',
+//                         'p.satuan',
+//                         DB::raw('SUM(i.kuantitas) as total_kuantitas'),
+//                         DB::raw('SUM(i.kuantitas * i.harga_satuan) as omset')
+//                     )
+//                     ->whereBetween('t.tanggal_transaksi', [$tanggal_mulai, $tanggal_akhir])
+
+//                     ->where(function ($q) {
+//                         // Rule 1: pelanggan AEON / IB → satuan != pack
+//                         $q->where(function ($sub) {
+//                             $sub->whereIn('pelanggan', ['Aeon Mall', 'Istana Buah'])
+//                                 ->whereRaw('LOWER(p.satuan) != "pack"');
+//                         })
+//                         // Rule 2: pelanggan lain → ambil semua satuan
+//                         ->orWhere(function ($sub) {
+//                             $sub->whereNotIn('pelanggan', ['Aeon Mall', 'Istana Buah']);
+//                         });
+//                     })
+
+//                     // Rule 3: pengecualian selada satuan kg
+//                     ->whereRaw('NOT (LOWER(p.nama_produk) = "selada")')
+
+//                     ->groupBy('t.tanggal_transaksi', 'p.nama_produk', 'p.satuan')
+//                     ->orderBy('t.tanggal_transaksi', 'asc');
+
+
+//         // Rekap Penjualan Lainnya
+//         $dataLainnya = $queryLainnya->get();
+//         $totalLainnyaOmset = $dataLainnya->sum('omset');
+
+//         $dataPemasukan = $queryPemasukan->get();
+//         $totalOmsetPemasukan = $dataPemasukan->sum('omset');
+
+//         $dataPengeluaran = DB::table('transaksi_pengeluaran as t')
+//             ->join('item_pengeluaran as i', 't.id_item', '=', 'i.id')
+//             ->join('jenis_pengeluaran as j', 'i.jenis_pengeluaran_id', '=', 'j.id')
+//             ->select(
+//                 'j.nama as jenis_pengeluaran',
+//                 DB::raw('SUM(t. jumlah) as total_pengeluaran')
+//             )
+//             ->whereBetween('t.tanggal', [$tanggal_mulai, $tanggal_akhir])
+//             ->groupBy('j.id')
+//             ->orderBy('j.id', 'asc')
+//             ->get();
+
+//         $totalPengeluaran = $dataPengeluaran->sum('total_pengeluaran');
+
+//         $total =  $totalOmsetPemasukan - $totalPengeluaran;
+
+//         $rentang_mulai = Carbon::parse($tanggal_mulai)->translatedFormat('d F Y');
+//         $rentang_akhir = Carbon::parse($tanggal_akhir)->translatedFormat('d F Y');
+        
+//        $html = view('pages.keuangan.labaRugi.cetak', [
+//             'title' => 'Laporan Laba Rugi',
+//             'tanggal_mulai' => $rentang_mulai,
+//             'tanggal_akhir' => $rentang_akhir,
+//             // 'pemasukan' => $dataPemasukan,
+//             'total_selada_omset' => $totalSeladaOmset,
+//             'total_aeon_omset' => $totalAeonOmset,
+//             'total_istana_omset' => $totalIstanaOmset,
+//             'total_lainnya_omset' => $totalLainnyaOmset,
+//             'total_omset_pemasukan' => $totalOmsetPemasukan,
+//             'pengeluaran' => $dataPengeluaran,
+//             'pengeluaran_total' => $totalPengeluaran,
+//             'total' => $total
+//        ])->render();
+
+//         $mpdf = new \Mpdf\Mpdf();
+//         $mpdf->WriteHTML($html);
+
+//         $mpdf->Output(
+//             'Laporan_Laba_Rugi_' . $tanggal_mulai . '_sampai_' . $tanggal_akhir . '.pdf',
+//             \Mpdf\Output\Destination::INLINE
+//         );
+
+//     }

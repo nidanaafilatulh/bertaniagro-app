@@ -50,76 +50,101 @@
                     </div>
                     @if (request('tanggal_mulai') && request('tanggal_akhir') && request('tanggal_mulai') <= request('tanggal_akhir'))
                         <div class="table-responsive">
-                            <h1 class="ms-3 mt-3">Laporan Laba Rugi</h1>
-                            <h2 class="ms-3 mb-3">Periode {{ $tanggal_mulai }} - {{ $tanggal_akhir }}</h2>
+                            <h1 class="ms-3 mt-3 mb-3">Pemasukan</h1>
                             <table class="table table-selectable card-table table-vcenter text-nowrap datatable">
-                                
+                                <colgroup>
+                                    <col style="width:75%">
+                                    <col style="width:25%">
+                                </colgroup>
                                 <thead>
                                     <tr>
-                                        <th>Perkiraan</th>
+                                        <th>Keterangan</th>
                                         <th>Jumlah</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td><span class="text-secondary">Penjualan Selada</span></td>
                                         <td>
-                                            <strong>Pendapatan</strong>
-                                        </td>
-                                        <td>
-                                            Rp {{ number_format($pendapatan, 0, ',', '.') }}
+                                            Rp {{ number_format($total_selada_omset, 0, ',', '.') }}
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><span class="text-secondary">Penjualan Sayur Pack Aeon</span></td>
                                         <td>
-                                            <strong>Harga Pokok Penjualan</strong>
-                                        </td>
-                                        <td>
-                                            Rp {{ number_format($hpp, 0, ',', '.') }}
+                                            Rp {{ number_format($total_aeon_omset, 0, ',', '.') }}
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><span class="text-secondary">Penjualan Sayur Pack Istana Buah</span></td>
                                         <td>
-                                            <strong>Laba Kotor</strong>
+                                            Rp {{ number_format($total_istana_omset, 0, ',', '.') }}
                                         </td>
-                                        <td>Rp {{ number_format($labaKotor, 0, ',', '.') }}</td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
+                                        <td><span class="text-secondary">Penjualan Lainnya</span></td>
                                         <td>
-                                            <strong>Beban Operasional:</strong>
+                                            Rp {{ number_format($total_lainnya_omset, 0, ',', '.') }}
                                         </td>
-                                        <td></td>
                                     </tr>
-                                    @foreach ($beban_pengeluaran as $beban)
+
+                                    {{-- @foreach ($pemasukan as $item_pemasukan)
                                         <tr>
+                                            <td><span class="text-secondary">{{ $item_pemasukan->produk }}
+                                                    ({{ $item_pemasukan->satuan }})
+                                                </span></td>
                                             <td>
-                                                <span>Beban {{ Str::title($beban->jenis_beban) }}</span>
+                                                Rp {{ number_format($item_pemasukan->omset, 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                    @endforeach --}}
+                                    <tr class="fw-bold bg-light">
+                                        <td>Total Pemasukan</td>
+                                        <td>Rp {{ number_format($total_omset_pemasukan, 0, ',', '.') }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-responsive mt-3">
+                            <h1 class="ms-3 mb-3">Pengeluaran</h1>
+                            <table class="table table-selectable card-table table-vcenter text-nowrap datatable">
+                                <colgroup>
+                                    <col style="width:75%">
+                                    <col style="width:25%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>Keterangan</th>
+                                        <th>Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($pengeluaran as $item_pengeluaran)
+                                        <tr>
+                                            <td><span
+                                                    class="text-secondary">{{ $item_pengeluaran->jenis_pengeluaran }}</span>
                                             </td>
                                             <td>
-                                                Rp {{ number_format($beban->beban_pengeluaran, 0, ',', '.') }}
+                                                Rp {{ number_format($item_pengeluaran->total_pengeluaran, 0, ',', '.') }}
                                             </td>
                                         </tr>
                                     @endforeach
-                                    <tr>
-                                        <td>
-                                            <strong>Total Beban Operasional</strong>
-                                        </td>
-                                        <td>Rp {{ number_format($total_beban_pengeluaran, 0, ',', '.') }}</td>
+                                    <tr class="fw-bold bg-light">
+                                        <td>Total Pengeluaran</td>
+                                        <td>Rp {{ number_format($total_pengeluaran, 0, ',', '.') }}</td>
                                     </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
+                                    <tr class="fw-bold bg-light">
+                                        @if ($total < 0)
+                                            <td>Rugi</td>
+                                            <td class="text-red">Rp {{ number_format($total, 0, ',', '.') }}</td>
+                                        @elseif($total > 0)
+                                            <td>Laba</td>
+                                            <td class="text-green">Rp {{ number_format($total, 0, ',', '.') }}</td>
+                                        @else
+                                            <td>Total</td>
+                                            <td>Rp {{ number_format($total, 0, ',', '.') }}</td>
+                                        @endif
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Laba Bersih Sebelum Pajak</strong>
-                                        </td>
-                                        <td>
-                                            Rp {{ number_format($labaBersihSebelumPajak, 0, ',', '.') }}
-                                        </td>
                                 </tbody>
                             </table>
                         </div>

@@ -163,17 +163,21 @@
                                                             @if ($pemasukan->itemPemasukan->count() == 1)
                                                                 {{ $pemasukan->itemPemasukan[0]->produk->nama_produk }}
                                                                 (@if ($pemasukan->itemPemasukan[0]->kuantitas % 1 == 0)
-                                                                    {{ number_format($pemasukan->itemPemasukan[0]->kuantitas, 0, ',', '.') }} {{ $pemasukan->itemPemasukan[0]->produk->satuan }}
+                                                                    {{ number_format($pemasukan->itemPemasukan[0]->kuantitas, 0, ',', '.') }}
+                                                                    {{ $pemasukan->itemPemasukan[0]->produk->satuan }}
                                                                 @else
-                                                                    {{ number_format($pemasukan->itemPemasukan[0]->kuantitas, 2, ',', '.') }} {{ $pemasukan->itemPemasukan[0]->produk->satuan }}
+                                                                    {{ number_format($pemasukan->itemPemasukan[0]->kuantitas, 2, ',', '.') }}
+                                                                    {{ $pemasukan->itemPemasukan[0]->produk->satuan }}
                                                                 @endif)
                                                                 <br>
                                                             @elseif ($pemasukan->itemPemasukan->count() > 1)
                                                                 @foreach ($pemasukan->itemPemasukan as $item)
-                                                                    - {{ $item->produk->nama_produk }} (@if($item->kuantitas % 1 == 0)
-                                                                        {{ number_format($item->kuantitas, 0, ',', '.') }} {{ $item->produk->satuan }}
+                                                                    - {{ $item->produk->nama_produk }} (@if ($item->kuantitas % 1 == 0)
+                                                                        {{ number_format($item->kuantitas, 0, ',', '.') }}
+                                                                        {{ $item->produk->satuan }}
                                                                     @else
-                                                                        {{ number_format($item->kuantitas, 2, ',', '.') }} {{ $item->produk->satuan }}
+                                                                        {{ number_format($item->kuantitas, 2, ',', '.') }}
+                                                                        {{ $item->produk->satuan }}
                                                                     @endif)<br>
                                                                 @endforeach
                                                             @endif
@@ -266,8 +270,9 @@
                                                         </td>
                                                         <td class="text-end">
                                                             <div class="btn-list flex-nowrap justify-content-end">
-                                                                @if($produk->itemPemasukan->count() > 0)
-                                                                    <a href="#" class="btn btn-outline-warning disabled">
+                                                                @if ($produk->itemPemasukan->count() > 0)
+                                                                    <a href="#"
+                                                                        class="btn btn-outline-warning disabled">
                                                                         Tidak Bisa Edit/Hapus
                                                                     </a>
                                                                 @else
@@ -303,7 +308,6 @@
             </div>
         </div>
     </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
 
@@ -461,23 +465,46 @@
                     </div>
 
                     <div class="modal-body">
-
                         <div class="mb-3">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    {{ $errors->first() }}
+                                </div>
+                            @endif
+                            <div id="duplicate-error" class="alert alert-danger d-none mb-3"></div>
                             <label class="form-label">Nama Produk*</label>
-                            <input type="text" name="nama_produk" id="edit_produk" class="form-control"
+                            <input type="text" name="nama_produk" id="edit_produk"
+                                class="form-control @error('nama_produk') is-invalid @enderror"
                                 placeholder="Masukkan nama produk" required>
+                            @error('nama_produk')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Satuan*</label>
-                            <input type="text" name="satuan" id="edit_satuan" class="form-control"
-                                placeholder="Masukkan satuan" required>
+                            <input type="text" name="satuan" id="edit_satuan"
+                                class="form-control @error('satuan') is-invalid @enderror" placeholder="Masukkan satuan"
+                                required>
+                            @error('satuan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Harga Satuan Normal*</label>
                             <input type="number" name="harga_satuan_normal" id="edit_harga_satuan_normal"
-                                class="form-control harga-format" placeholder="Masukkan harga satuan normal" required>
+                                class="form-control harga-format @error('harga_satuan_normal') is-invalid @enderror"
+                                placeholder="Masukkan harga satuan normal" required>
+                            @error('harga_satuan_normal')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                     </div>
@@ -488,37 +515,92 @@
                     </div>
 
                 </form>
-
             </div>
         </div>
     </div>
     <script>
+        const daftarProduk = @json($daftar_produk);
+    </script>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
 
             const modalEdit = document.getElementById('modal-edit');
+            const form = document.getElementById('editForm');
+            const errorBox = document.getElementById('duplicate-error');
+
+            let currentId = null;
 
             modalEdit.addEventListener('show.bs.modal', function(event) {
-
-                // tombol yang diklik
                 const button = event.relatedTarget;
+                if (!button) return;
 
-                // ambil data dari atribut
                 const id = button.getAttribute('data-id-produk');
                 const nama = button.getAttribute('data-nama');
                 const satuan = button.getAttribute('data-satuan');
                 const harga = button.getAttribute('data-harga');
 
-                // isi input modal
+                currentId = id;
+
                 document.getElementById('edit_produk').value = nama;
                 document.getElementById('edit_satuan').value = satuan;
                 document.getElementById('edit_harga_satuan_normal').value = harga;
 
-                // set action form
-                const form = document.getElementById('editForm');
                 form.action = '/produk/' + id;
 
+                // reset error saat modal dibuka
+                errorBox.classList.add('d-none');
+                errorBox.innerText = '';
+                clearInvalid();
             });
 
+            const normalize = (val) => val.toLowerCase().trim().replace(/\s+/g, '');
+
+            function clearInvalid() {
+                document.querySelectorAll('#modal-edit .form-control').forEach(el => {
+                    el.classList.remove('is-invalid');
+                });
+            }
+
+            form.addEventListener('submit', function(e) {
+
+                const namaEl = document.getElementById('edit_produk');
+                const satuanEl = document.getElementById('edit_satuan');
+                const hargaEl = document.getElementById('edit_harga_satuan_normal');
+
+                const namaInput = normalize(namaEl.value);
+                const satuanInput = normalize(satuanEl.value);
+                const hargaInput = hargaEl.value;
+
+                let isDuplicate = false;
+
+                daftarProduk.forEach(produk => {
+
+                    if (produk.id == currentId) return;
+
+                    const namaDb = normalize(produk.nama_produk);
+                    const satuanDb = normalize(produk.satuan);
+                    const hargaDb = produk.harga_satuan_normal;
+
+                    if (
+                        namaInput === namaDb &&
+                        satuanInput === satuanDb 
+                    ) {
+                        isDuplicate = true;
+                    }
+                });
+
+                if (isDuplicate) {
+                    e.preventDefault();
+
+                    // tampilkan error di atas
+                    errorBox.classList.remove('d-none');
+                    errorBox.innerText = 'Data produk sudah ada! Tidak boleh duplikat.';
+
+                    // tandai field
+                    namaEl.classList.add('is-invalid');
+                    satuanEl.classList.add('is-invalid');
+                }
+            });
         });
     </script>
     <script>
@@ -556,22 +638,53 @@
             form.action = "/produk/" + idProduk;
         });
     </script>
+    @if (session('open_modal') == 'edit-produk')
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+
+                let targetTab = document.querySelector('a[href="#tabs-produk"]');
+
+                if (targetTab) {
+                    let tab = new bootstrap.Tab(targetTab);
+                    tab.show();
+                }
+
+                // langsung kasih delay tanpa nunggu event
+                setTimeout(() => {
+
+                    let modalEl = document.getElementById('modal-edit');
+                    let modal = new bootstrap.Modal(modalEl);
+                    modal.show();
+
+                    // isi ulang input
+                    document.getElementById('edit_produk').value = "{{ old('nama_produk') }}";
+                    document.getElementById('edit_satuan').value = "{{ old('satuan') }}";
+                    document.getElementById('edit_harga_satuan_normal').value =
+                        "{{ old('harga_satuan_normal') }}";
+
+                    // set action
+                    document.getElementById('editForm').action =
+                        "/produk/{{ session('edit_id') }}";
+
+                }, 200); // kasih sedikit delay biar stabil
+
+            });
+        </script>
+    @endif
 @endsection
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        // Aktifkan tab berdasarkan hash URL
         let hash = window.location.hash;
+
         if (hash) {
             let trigger = document.querySelector(`a[href="${hash}"]`);
             if (trigger) {
-                let tab = new bootstrap.Tab(trigger);
-                tab.show();
+                new bootstrap.Tab(trigger).show();
             }
         }
 
-        // Simpan tab yang diklik ke URL hash
         let tabLinks = document.querySelectorAll('a[data-bs-toggle="tab"]');
         tabLinks.forEach(function(tab) {
             tab.addEventListener('shown.bs.tab', function(e) {

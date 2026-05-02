@@ -18,7 +18,8 @@ return new class extends Migration
                 ->references('id')
                 ->on('jenis_pengeluaran')
                 ->onDelete('cascade');
-            $table->string('nama');
+            $table->string('nama', 50);
+            $table->unique(['jenis_pengeluaran_id', 'nama']);
             $table->timestamps();
         });
     }
